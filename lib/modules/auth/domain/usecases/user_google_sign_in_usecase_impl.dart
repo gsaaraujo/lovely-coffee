@@ -3,14 +3,14 @@ import 'package:lovely_coffee/core/faults/failures/base_failure.dart';
 import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.dart';
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
 
-abstract class IUserGoogleSignInUsecase {
+abstract class UserGoogleSignInUsecase {
   Future<Either<BaseFailure, UserSignedInEntity>> call();
 }
 
-class UserGoogleSignInUsecaseImpl implements IUserGoogleSignInUsecase {
+class UserGoogleSignInUsecaseImpl implements UserGoogleSignInUsecase {
   UserGoogleSignInUsecaseImpl(this._repository);
 
-  final IUserRepository _repository;
+  final UserRepository _repository;
 
   @override
   Future<Either<BaseFailure, UserSignedInEntity>> call() async {

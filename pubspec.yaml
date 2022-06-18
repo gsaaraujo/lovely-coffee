@@ -12,11 +12,16 @@ dependencies:
   flutter:
     sdk: flutter
 
+  bloc: ^8.0.3
+  hive: ^2.2.2
   dartz: ^0.10.1
   equatable: ^2.0.3
+  hive_flutter: ^1.1.0
+  flutter_bloc: ^8.0.1
   google_sign_in: ^5.3.3
   firebase_auth: ^3.3.19
   cupertino_icons: ^1.0.2
+  flutter_secure_storage: ^5.0.2
 
 dev_dependencies:
   flutter_test:

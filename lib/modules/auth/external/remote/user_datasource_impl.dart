@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lovely_coffee/app/constants/error_strings.dart';
 import 'package:lovely_coffee/core/faults/exceptions/unexpected_exception.dart';
-import 'package:lovely_coffee/modules/auth/data/faults/exceptions/auth_exception.dart';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
+import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
+import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
+import 'package:lovely_coffee/modules/auth/infra/faults/exceptions/auth_exception.dart';
 
-abstract class IUserDatasource {
-  Future<UserSignedInEntity> googleSignIn();
-}
-
-class UserDatasourceImpl implements IUserDatasource {
+class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(
     this.firebaseAuth,
     this.googleSignInAuth,
@@ -19,10 +17,10 @@ class UserDatasourceImpl implements IUserDatasource {
 
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignInAuth;
-  final GoogleAuthProvider googleAuthProvider;
+  final OAuthCredential googleAuthProvider;
 
   @override
-  Future<UserSignedInEntity> googleSignIn() async {
+  Future<UserSignedInModel> googleSignIn() async {
     try {
       final GoogleSignInAccount? googleUser = await googleSignInAuth.signIn();
 
@@ -37,7 +35,7 @@ class UserDatasourceImpl implements IUserDatasource {
       final UserCredential userCredential =
           await firebaseAuth.signInWithCredential(credential);
 
-      return UserSignedInEntity(
+      return UserSignedInModel(
         uid: userCredential.user?.uid ?? '',
         imageUrl: userCredential.user?.photoURL ?? '',
         name: userCredential.user?.displayName ?? '',
@@ -45,10 +43,10 @@ class UserDatasourceImpl implements IUserDatasource {
         refreshToken: userCredential.user?.refreshToken ?? '',
       );
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.message);
+      log(e.message ?? e.code);
       throw const AuthException(message: ErrorStrings.auth);
     } catch (e) {
-      debugPrint(e.toString());
+      log(e.toString());
       throw const UnexpectedException(message: ErrorStrings.unexpected);
     }
   }

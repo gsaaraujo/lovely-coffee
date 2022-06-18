@@ -6,10 +6,10 @@ import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.d
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
 
-class MockUserRepository extends Mock implements IUserRepository {}
+class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
-  late IUserRepository mockRepository;
+  late UserRepository mockRepository;
   late UserGoogleSignInUsecaseImpl usecase;
 
   const fakeUserSignedIn = UserSignedInEntity(
