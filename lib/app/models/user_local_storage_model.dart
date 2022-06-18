@@ -1,5 +1,7 @@
-class UserLocalStorageModel {
-  UserLocalStorageModel({
+import 'package:equatable/equatable.dart';
+
+class UserLocalStorageModel extends Equatable {
+  const UserLocalStorageModel({
     required this.uid,
     this.imageUrl,
     required this.name,
@@ -24,4 +26,7 @@ class UserLocalStorageModel {
       "name": name,
     };
   }
+
+  @override
+  List<Object?> get props => [uid, imageUrl, name];
 }

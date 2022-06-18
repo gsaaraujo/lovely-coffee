@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
-class UserSecureLocalStorageModel {
-  UserSecureLocalStorageModel({
+class UserSecureLocalStorageModel extends Equatable {
+  const UserSecureLocalStorageModel({
     required this.accessToken,
     required this.refreshToken,
   });
@@ -28,4 +28,7 @@ class UserSecureLocalStorageModel {
 
   factory UserSecureLocalStorageModel.fromJson(String source) =>
       UserSecureLocalStorageModel.fromMap(json.decode(source));
+
+  @override
+  List<Object?> get props => [accessToken, refreshToken];
 }

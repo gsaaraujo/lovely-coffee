@@ -17,7 +17,7 @@ class UserDatasourceImpl implements UserDatasource {
 
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignInAuth;
-  final OAuthCredential googleAuthProvider;
+  final GoogleAuthProvider googleAuthProvider;
 
   @override
   Future<UserSignedInModel> googleSignIn() async {
@@ -51,3 +51,5 @@ class UserDatasourceImpl implements UserDatasource {
     }
   }
 }
+
+class _WrapperForGoogleAuthProvider {}

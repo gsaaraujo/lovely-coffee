@@ -3,9 +3,7 @@ import 'package:lovely_coffee/app/models/user_secure_local_storage_model.dart';
 import 'package:lovely_coffee/app/services/secure_local_storage/secure_local_storage.dart';
 
 class SecureLocalStorageImpl implements SecureLocalStorage {
-  SecureLocalStorageImpl(this._secureStorage);
-
-  final FlutterSecureStorage _secureStorage;
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   @override
   Future<void> addTokens(
