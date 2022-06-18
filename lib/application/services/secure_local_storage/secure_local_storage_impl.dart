@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:lovely_coffee/app/models/user_secure_local_storage_model.dart';
-import 'package:lovely_coffee/app/services/secure_local_storage/secure_local_storage.dart';
+import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
+import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage.dart';
 
 class SecureLocalStorageImpl implements SecureLocalStorage {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();

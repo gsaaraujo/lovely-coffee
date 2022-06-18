@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:lovely_coffee/app/constants/error_strings.dart';
+import 'package:lovely_coffee/application/constants/error_strings.dart';
 import 'package:lovely_coffee/core/faults/failures/base_failure.dart';
 import 'package:lovely_coffee/core/faults/failures/unexpected_failure.dart';
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';

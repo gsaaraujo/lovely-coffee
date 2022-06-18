@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:lovely_coffee/app/constants/error_strings.dart';
+import 'package:lovely_coffee/application/constants/error_strings.dart';
 import 'package:lovely_coffee/core/faults/exceptions/unexpected_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
@@ -12,12 +12,12 @@ class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(
     this.firebaseAuth,
     this.googleSignInAuth,
-    this.googleAuthProvider,
+    // this.googleAuthProvider,
   );
 
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignInAuth;
-  final GoogleAuthProvider googleAuthProvider;
+  // final GoogleAuthProvider googleAuthProvider;
 
   @override
   Future<UserSignedInModel> googleSignIn() async {

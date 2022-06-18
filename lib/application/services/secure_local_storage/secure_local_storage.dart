@@ -1,4 +1,4 @@
-import 'package:lovely_coffee/app/models/user_secure_local_storage_model.dart';
+import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
 
 abstract class SecureLocalStorage {
   Future<void> addTokens(UserSecureLocalStorageModel userSecureLocalStorage);

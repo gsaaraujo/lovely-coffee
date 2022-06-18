@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:lovely_coffee/app/models/user_local_storage_model.dart';
-import 'package:lovely_coffee/app/models/user_secure_local_storage_model.dart';
-import 'package:lovely_coffee/app/services/local_storage/local_storage.dart';
-import 'package:lovely_coffee/app/services/secure_local_storage/secure_local_storage.dart';
+import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
+import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage.dart';
+import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
 import 'package:lovely_coffee/modules/auth/presenter/cubits/sign_in_states.dart';
 
