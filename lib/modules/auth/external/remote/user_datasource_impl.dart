@@ -6,7 +6,7 @@ import 'package:lovely_coffee/application/constants/error_strings.dart';
 import 'package:lovely_coffee/core/faults/exceptions/unexpected_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
-import 'package:lovely_coffee/modules/auth/infra/faults/exceptions/auth_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/faults/exceptions/auth_exception.dart';
 
 class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(

@@ -5,9 +5,9 @@ import 'package:lovely_coffee/core/faults/failures/unexpected_failure.dart';
 import 'package:lovely_coffee/core/faults/exceptions/unexpected_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
-import 'package:lovely_coffee/modules/auth/infra/faults/failures/auth_failure.dart';
+import 'package:lovely_coffee/modules/auth/domain/faults/failures/auth_failure.dart';
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
-import 'package:lovely_coffee/modules/auth/infra/faults/exceptions/auth_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/faults/exceptions/auth_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/repositories/user_repository_impl.dart';
 
 class MockUserDatasource extends Mock implements UserDatasource {}

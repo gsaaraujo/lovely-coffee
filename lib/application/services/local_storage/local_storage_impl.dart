@@ -32,4 +32,10 @@ class LocalStorageImpl implements LocalStorage {
     final box = await _hive.openBox('USER_BOX');
     box.put('USER', userLocalStorage.toMap());
   }
+
+  @override
+  Future<bool> hasUser() async {
+    final box = await _hive.openBox('USER_BOX');
+    return box.containsKey('USER');
+  }
 }

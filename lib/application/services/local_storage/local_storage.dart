@@ -5,4 +5,5 @@ abstract class LocalStorage {
   Future<UserLocalStorageModel?> getUser();
   Future<void> deleteUser();
   Future<void> updateUser(UserLocalStorageModel userLocalStorage);
+  Future<bool> hasUser();
 }
