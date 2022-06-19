@@ -51,5 +51,3 @@ class UserDatasourceImpl implements UserDatasource {
     }
   }
 }
-
-class _WrapperForGoogleAuthProvider {}

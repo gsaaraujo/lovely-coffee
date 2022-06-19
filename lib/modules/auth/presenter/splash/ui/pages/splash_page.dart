@@ -15,7 +15,13 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     final client = Modular.get<DeviceConnectivityService>();
 
-    client.hasDeviceConnection().listen((hasConnection) {});
+    client.hasDeviceConnection().listen((hasConnection) {
+      if (hasConnection) {
+        print('connected');
+      } else {
+        print('not connected');
+      }
+    });
 
     super.initState();
   }
