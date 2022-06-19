@@ -1,6 +1,6 @@
 import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
 
-abstract class SecureLocalStorage {
+abstract class SecureLocalStorageService {
   Future<void> addTokens(UserSecureLocalStorageModel userSecureLocalStorage);
   Future<UserSecureLocalStorageModel?> getTokens();
   Future<void> deleteTokens();

@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
-import 'package:lovely_coffee/application/services/local_storage/local_storage.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 
-class LocalStorageImpl implements LocalStorage {
+class LocalStorageServiceImpl implements LocalStorageService {
   final HiveInterface _hive = Hive;
 
   @override

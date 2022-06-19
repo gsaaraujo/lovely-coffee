@@ -8,6 +8,6 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (context, args) => const SplashPage()),
+        ChildRoute('/', child: (_, args) => const SplashPage()),
       ];
 }

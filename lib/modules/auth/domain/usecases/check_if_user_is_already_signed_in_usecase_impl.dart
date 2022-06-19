@@ -1,4 +1,4 @@
-import 'package:lovely_coffee/application/services/local_storage/local_storage.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 
 abstract class CheckIfUserIsAlreadySignedInUsecase {
   Future<bool> call();
@@ -8,7 +8,7 @@ class CheckIfUserIsAlreadySignedInUsecaseImpl
     implements CheckIfUserIsAlreadySignedInUsecase {
   CheckIfUserIsAlreadySignedInUsecaseImpl(this._localStorage);
 
-  final LocalStorage _localStorage;
+  final LocalStorageService _localStorage;
 
   @override
   Future<bool> call() async {

@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lovely_coffee/application/services/local_storage/local_storage.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/check_if_user_is_already_signed_in_usecase_impl.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockLocalStorage extends Mock implements LocalStorage {}
+class MockLocalStorage extends Mock implements LocalStorageService {}
 
 void main() {
   late MockLocalStorage mockLocalStorage;

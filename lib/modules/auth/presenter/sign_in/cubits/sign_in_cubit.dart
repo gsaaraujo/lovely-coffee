@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
-import 'package:lovely_coffee/application/services/local_storage/local_storage.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_states.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
-import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage.dart';
+import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage_service.dart';
 
 class SignInCubit extends Cubit<SignInStates> {
   SignInCubit(
@@ -14,8 +14,8 @@ class SignInCubit extends Cubit<SignInStates> {
   ) : super(SignInInitialState());
 
   final UserGoogleSignInUsecase _usecase;
-  final LocalStorage _localStorage;
-  final SecureLocalStorage _secureLocalStorage;
+  final LocalStorageService _localStorage;
+  final SecureLocalStorageService _secureLocalStorage;
 
   void googleSignIn() async {
     emit(SignInLoadingState());

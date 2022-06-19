@@ -1,6 +1,6 @@
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
 
-abstract class LocalStorage {
+abstract class LocalStorageService {
   Future<void> addUser(UserLocalStorageModel userLocalStorage);
   Future<UserLocalStorageModel?> getUser();
   Future<void> deleteUser();
