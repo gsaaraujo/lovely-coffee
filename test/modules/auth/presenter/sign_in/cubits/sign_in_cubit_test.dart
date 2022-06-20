@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
+import 'package:lovely_coffee/modules/auth/domain/usecases/user_email_password_sign_in_usecase_impl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +17,9 @@ import 'package:lovely_coffee/application/services/secure_local_storage/secure_l
 class MockUserGoogleSignInUsecase extends Mock
     implements UserGoogleSignInUsecase {}
 
+class MockUserEmailPasswordSignInUsecase extends Mock
+    implements UserEmailPasswordSignInUsecase {}
+
 class MockLocalStorage extends Mock implements LocalStorageService {}
 
 class MockSecureLocalStorage extends Mock implements SecureLocalStorageService {
@@ -25,9 +29,13 @@ class MockBaseException extends BaseException {}
 
 void main() {
   late SignInCubit cubit;
-  late LocalStorageService localStorageService;
-  late UserGoogleSignInUsecase usecase;
-  late SecureLocalStorageService secureLocalStorageService;
+  late LocalStorageService mockLocalStorageService;
+  late UserGoogleSignInUsecase mockGoogleSignInUsecase;
+  late MockUserEmailPasswordSignInUsecase mockEmailPasswordSignInUsecase;
+  late SecureLocalStorageService mockSecureLocalStorageService;
+
+  const email = 'gabriel.houth@gmail.com';
+  const password = '123';
 
   const fakeUserSignedInEntity = UserSignedInEntity(
     uid: 'abc-123',
@@ -49,11 +57,28 @@ void main() {
   );
 
   setUp(() {
-    usecase = MockUserGoogleSignInUsecase();
-    localStorageService = MockLocalStorage();
-    secureLocalStorageService = MockSecureLocalStorage();
-    cubit =
-        SignInCubit(usecase, localStorageService, secureLocalStorageService);
+    mockGoogleSignInUsecase = MockUserGoogleSignInUsecase();
+    mockEmailPasswordSignInUsecase = MockUserEmailPasswordSignInUsecase();
+    mockLocalStorageService = MockLocalStorage();
+    mockSecureLocalStorageService = MockSecureLocalStorage();
+
+    cubit = SignInCubit(
+      mockGoogleSignInUsecase,
+      mockEmailPasswordSignInUsecase,
+      mockLocalStorageService,
+      mockSecureLocalStorageService,
+    );
+
+    when(() => mockLocalStorageService.addUser(fakeUserLocalStorage))
+        .thenAnswer(
+      (_) async => () {},
+    );
+
+    when(
+      () => mockSecureLocalStorageService.addTokens(fakeUserSecureLocalStorage),
+    ).thenAnswer(
+      (_) async => () {},
+    );
   });
 
   group('SignInCubit', () {
@@ -64,19 +89,8 @@ void main() {
     blocTest<SignInCubit, SignInStates>(
       'googleSignIn() should emits [SignInLoadingState, SignInSucceedState]',
       build: () {
-        when(() => usecase()).thenAnswer(
+        when(() => mockGoogleSignInUsecase()).thenAnswer(
           (_) async => const Right(fakeUserSignedInEntity),
-        );
-
-        when(() => localStorageService.addUser(fakeUserLocalStorage))
-            .thenAnswer(
-          (_) async => () {},
-        );
-
-        when(
-          () => secureLocalStorageService.addTokens(fakeUserSecureLocalStorage),
-        ).thenAnswer(
-          (_) async => () {},
         );
 
         return cubit;
@@ -88,19 +102,8 @@ void main() {
     blocTest<SignInCubit, SignInStates>(
       'googleSignIn() should emits [SignInLoadingState, SignInFailedState]',
       build: () {
-        when(() => usecase()).thenAnswer(
+        when(() => mockGoogleSignInUsecase()).thenAnswer(
           (_) async => Left(MockBaseException()),
-        );
-
-        when(() => localStorageService.addUser(fakeUserLocalStorage))
-            .thenAnswer(
-          (_) async => () {},
-        );
-
-        when(
-          () => secureLocalStorageService.addTokens(fakeUserSecureLocalStorage),
-        ).thenAnswer(
-          (_) async => () {},
         );
 
         return cubit;
@@ -110,6 +113,19 @@ void main() {
         isA<SignInLoadingState>(),
         SignInFailedState(message: ExceptionMessagesConst.auth),
       ],
+    );
+
+    blocTest<SignInCubit, SignInStates>(
+      'emailPasswordSignIn() should emits [SignInLoadingState, SignInSucceedState]',
+      build: () {
+        when(() => mockEmailPasswordSignInUsecase(email, password)).thenAnswer(
+          (_) async => const Right(fakeUserSignedInEntity),
+        );
+
+        return cubit;
+      },
+      act: (cubit) => cubit.emailPasswordSignIn(email, password),
+      expect: () => [isA<SignInLoadingState>(), isA<SignInSucceedState>()],
     );
   });
 }

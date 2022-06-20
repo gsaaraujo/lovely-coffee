@@ -8,6 +8,8 @@ import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_u
 
 class MockUserRepository extends Mock implements UserRepository {}
 
+class MockBaseException extends BaseException {}
+
 void main() {
   late UserRepository mockRepository;
   late UserGoogleSignInUsecaseImpl usecase;
@@ -25,12 +27,21 @@ void main() {
     usecase = UserGoogleSignInUsecaseImpl(mockRepository);
   });
 
-  test('usecase should return UserSignedInEntity', () async {
+  test('usecase should return a fakeUserSignedIn', () async {
     when(() => mockRepository.googleSignIn())
         .thenAnswer((_) async => const Right(fakeUserSignedIn));
 
     final result = await usecase();
 
-    expect(result.fold(id, id), isA<UserSignedInEntity>());
+    expect(result.fold(id, id), fakeUserSignedIn);
+  });
+
+  test('usecase should return a MockBaseException', () async {
+    when(() => mockRepository.googleSignIn())
+        .thenAnswer((_) async => Left(MockBaseException()));
+
+    final result = await usecase();
+
+    expect(result.fold(id, id), MockBaseException());
   });
 }

@@ -4,4 +4,9 @@ import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity
 
 abstract class UserRepository {
   Future<Either<BaseException, UserSignedInEntity>> googleSignIn();
+
+  Future<Either<BaseException, UserSignedInEntity>> emailPasswordSignIn(
+    String email,
+    String password,
+  );
 }

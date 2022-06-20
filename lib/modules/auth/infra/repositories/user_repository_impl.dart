@@ -31,4 +31,24 @@ class UserRepositoryImpl implements UserRepository {
       return Left(exception);
     }
   }
+
+  @override
+  Future<Either<BaseException, UserSignedInEntity>> emailPasswordSignIn(
+      String email, String password) async {
+    try {
+      final bool hasNoConnection =
+          !(await _connectivityService.hasDeviceConnection());
+
+      if (hasNoConnection) {
+        return Left(NoDeviceConnectionException());
+      }
+
+      final UserSignedInModel userSignedIn =
+          await _userDatasource.emailPasswordSignIn(email, password);
+
+      return Right(userSignedIn.toEntity());
+    } on BaseException catch (exception) {
+      return Left(exception);
+    }
+  }
 }
