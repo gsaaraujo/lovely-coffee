@@ -1,20 +1,27 @@
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lovely_coffee/core/faults/failures/unexpected_failure.dart';
-import 'package:lovely_coffee/core/faults/exceptions/unexpected_exception.dart';
+import 'package:lovely_coffee/core/exceptions/base_exception.dart';
+import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/auth_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
-import 'package:lovely_coffee/modules/auth/domain/faults/failures/auth_failure.dart';
+import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
-import 'package:lovely_coffee/modules/auth/domain/faults/exceptions/auth_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/repositories/user_repository_impl.dart';
+import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
 
 class MockUserDatasource extends Mock implements UserDatasource {}
 
+class MockBaseException extends BaseException {}
+
+class MockDeviceConnectivityService extends Mock
+    implements DeviceConnectivityService {}
+
 void main() {
-  late UserDatasource mockDatasource;
   late UserRepositoryImpl repository;
+  late UserDatasource mockDatasource;
+  late DeviceConnectivityService mockDeviceConnectivityService;
 
   const fakeUserSignedInModel = UserSignedInModel(
     uid: 'abc-123',
@@ -34,33 +41,53 @@ void main() {
 
   setUp(() {
     mockDatasource = MockUserDatasource();
-    repository = UserRepositoryImpl(mockDatasource);
+    mockDeviceConnectivityService = MockDeviceConnectivityService();
+    repository = UserRepositoryImpl(
+      mockDatasource,
+      mockDeviceConnectivityService,
+    );
   });
 
   test('googleSignIn should return fakeUserSignedInEntity', () async {
+    when(() => mockDeviceConnectivityService.hasDeviceConnection())
+        .thenAnswer((_) async => true);
+
     when(() => mockDatasource.googleSignIn())
         .thenAnswer((_) async => fakeUserSignedInModel);
 
-    final response = await repository.googleSignIn();
+    final userSignedIn = await repository.googleSignIn();
 
-    expect(response.fold(id, id), fakeUserSignedInEntity);
+    expect(userSignedIn.fold(id, id), fakeUserSignedInEntity);
   });
 
-  test('googleSignIn should throw AuthFailure', () async {
-    when(() => mockDatasource.googleSignIn())
-        .thenThrow(const AuthException(message: ''));
+  test('googleSignIn should return NoDeviceConnectionException', () async {
+    when(() => mockDeviceConnectivityService.hasDeviceConnection())
+        .thenAnswer((_) async => false);
 
-    final response = await repository.googleSignIn();
+    final userSignedIn = await repository.googleSignIn();
 
-    expect(response.fold(id, id), const AuthFailure(message: ''));
+    expect(userSignedIn.fold(id, id), NoDeviceConnectionException());
   });
 
-  test('googleSignIn should throw UnexpectedFailure', () async {
-    when(() => mockDatasource.googleSignIn())
-        .thenThrow(const UnexpectedException(message: ''));
+  test('googleSignIn should return AuthException', () async {
+    when(() => mockDeviceConnectivityService.hasDeviceConnection())
+        .thenAnswer((_) async => true);
 
-    final response = await repository.googleSignIn();
+    when(() => mockDatasource.googleSignIn()).thenThrow(AuthException());
 
-    expect(response.fold(id, id), const UnexpectedFailure(message: ''));
+    final userSignedIn = await repository.googleSignIn();
+
+    expect(userSignedIn.fold(id, id), AuthException());
+  });
+
+  test('googleSignIn should return UnknownException', () async {
+    when(() => mockDeviceConnectivityService.hasDeviceConnection())
+        .thenAnswer((_) async => true);
+
+    when(() => mockDatasource.googleSignIn()).thenThrow(UnknownException());
+
+    final userSignedIn = await repository.googleSignIn();
+
+    expect(userSignedIn.fold(id, id), UnknownException());
   });
 }

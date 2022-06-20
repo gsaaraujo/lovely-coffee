@@ -5,10 +5,11 @@ class DeviceConnectivityServiceImpl implements DeviceConnectivityService {
   final _connectivity = Connectivity();
 
   @override
-  Stream<bool> hasDeviceConnection() async* {
-    _connectivity.onConnectivityChanged.map((connectivityResult) {
-      return connectivityResult == ConnectivityResult.wifi ||
-          connectivityResult == ConnectivityResult.mobile;
-    });
+  Future<bool> hasDeviceConnection() async {
+    final ConnectivityResult connectivityResult =
+        await _connectivity.checkConnectivity();
+
+    return connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile;
   }
 }

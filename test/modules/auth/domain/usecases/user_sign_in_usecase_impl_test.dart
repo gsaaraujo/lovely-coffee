@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lovely_coffee/core/faults/failures/base_failure.dart';
+import 'package:lovely_coffee/core/exceptions/base_exception.dart';
 import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.dart';
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
@@ -32,14 +32,5 @@ void main() {
     final result = await usecase();
 
     expect(result.fold(id, id), isA<UserSignedInEntity>());
-  });
-
-  test('usecase should return BaseFailure', () async {
-    when(() => mockRepository.googleSignIn())
-        .thenAnswer((_) async => const Left(BaseFailure(message: '')));
-
-    final result = await usecase();
-
-    expect(result.fold(id, id), isA<BaseFailure>());
   });
 }

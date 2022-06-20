@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:lovely_coffee/application/constants/error_strings.dart';
-import 'package:lovely_coffee/core/faults/exceptions/unexpected_exception.dart';
+import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/auth_exception.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
-import 'package:lovely_coffee/modules/auth/domain/faults/exceptions/auth_exception.dart';
 
 class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(
@@ -42,12 +39,13 @@ class UserDatasourceImpl implements UserDatasource {
         accessToken: await userCredential.user?.getIdToken() ?? '',
         refreshToken: userCredential.user?.refreshToken ?? '',
       );
-    } on FirebaseAuthException catch (e) {
-      log(e.message ?? e.code);
-      throw const AuthException(message: ErrorStrings.auth);
-    } catch (e) {
-      log(e.toString());
-      throw const UnexpectedException(message: ErrorStrings.unexpected);
+    } on FirebaseAuthException catch (exception, stackTrace) {
+      throw AuthException(
+        stackTrace: stackTrace,
+        errorMessage: exception.message,
+      );
+    } catch (exception, stackTrace) {
+      throw UnknownException(stackTrace: stackTrace);
     }
   }
 }

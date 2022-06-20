@@ -1,3 +1,3 @@
 abstract class DeviceConnectivityService {
-  Stream<bool> hasDeviceConnection();
+  Future<bool> hasDeviceConnection();
 }

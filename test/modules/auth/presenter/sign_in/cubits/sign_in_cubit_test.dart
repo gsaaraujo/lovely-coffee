@@ -1,14 +1,15 @@
 import 'package:dartz/dartz.dart';
+import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lovely_coffee/core/faults/failures/base_failure.dart';
+import 'package:lovely_coffee/core/exceptions/base_exception.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
-import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
 import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_cubit.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_states.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
 import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage_service.dart';
 
@@ -19,6 +20,8 @@ class MockLocalStorage extends Mock implements LocalStorageService {}
 
 class MockSecureLocalStorage extends Mock implements SecureLocalStorageService {
 }
+
+class MockBaseException extends BaseException {}
 
 void main() {
   late SignInCubit cubit;
@@ -86,7 +89,7 @@ void main() {
       'googleSignIn() should emits [SignInLoadingState, SignInFailedState]',
       build: () {
         when(() => usecase()).thenAnswer(
-          (_) async => const Left(BaseFailure(message: '')),
+          (_) async => Left(MockBaseException()),
         );
 
         when(() => localStorageService.addUser(fakeUserLocalStorage))
@@ -103,7 +106,10 @@ void main() {
         return cubit;
       },
       act: (cubit) => cubit.googleSignIn(),
-      expect: () => [isA<SignInLoadingState>(), SignInFailedState(message: '')],
+      expect: () => [
+        isA<SignInLoadingState>(),
+        SignInFailedState(message: ExceptionMessagesConst.auth),
+      ],
     );
   });
 }
