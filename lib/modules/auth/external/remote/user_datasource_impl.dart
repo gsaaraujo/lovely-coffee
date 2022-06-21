@@ -10,18 +10,18 @@ import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_credentials
 class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(
     this.firebaseAuth,
-    this.googleSignInAuth,
+    this.googleSignIn,
     // this.googleAuthProvider,
   );
 
   final FirebaseAuth firebaseAuth;
-  final GoogleSignIn googleSignInAuth;
+  final GoogleSignIn googleSignIn;
   // final GoogleAuthProvider googleAuthProvider;
 
   @override
-  Future<UserSignedInModel> googleSignIn() async {
+  Future<UserSignedInModel> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await googleSignInAuth.signIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
@@ -52,7 +52,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<UserSignedInModel> emailPasswordSignIn(
+  Future<UserSignedInModel> signInWithCredentials(
     String email,
     String password,
   ) async {

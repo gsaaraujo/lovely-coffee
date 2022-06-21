@@ -9,8 +9,8 @@ import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_credentials
 import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_email_exception.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_states.dart';
 import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
-import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
-import 'package:lovely_coffee/modules/auth/domain/usecases/user_email_password_sign_in_usecase_impl.dart';
+import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_google_usecase_impl.dart';
+import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_credentials_usecase_impl.dart';
 import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage_service.dart';
 
 class SignInCubit extends Cubit<SignInStates> {
@@ -21,8 +21,8 @@ class SignInCubit extends Cubit<SignInStates> {
     this._secureLocalStorage,
   ) : super(SignInInitialState());
 
-  final UserGoogleSignInUsecase _googleSignInUsecase;
-  final UserEmailPasswordSignInUsecase _emailPasswordUsecase;
+  final SignInWithGoogleUsecase _googleSignInUsecase;
+  final SignInWithCredentialsUsecase _emailPasswordUsecase;
   final LocalStorageService _localStorage;
   final SecureLocalStorageService _secureLocalStorage;
 
@@ -68,7 +68,7 @@ class SignInCubit extends Cubit<SignInStates> {
     );
   }
 
-  void emailPasswordSignIn(String email, String password) async {
+  void signInWithCredentials(String email, String password) async {
     emit(SignInLoadingState());
 
     final userSignedInEntity = await _emailPasswordUsecase(email, password);

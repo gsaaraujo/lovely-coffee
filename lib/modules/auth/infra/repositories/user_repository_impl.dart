@@ -4,7 +4,7 @@ import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dar
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
 import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.dart';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
+import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
 import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -14,7 +14,7 @@ class UserRepositoryImpl implements UserRepository {
   final DeviceConnectivityService _connectivityService;
 
   @override
-  Future<Either<BaseException, UserSignedInEntity>> googleSignIn() async {
+  Future<Either<BaseException, UserSignedInEntity>> signInWithGoogle() async {
     try {
       final bool hasNoConnection =
           !(await _connectivityService.hasDeviceConnection());
@@ -24,7 +24,7 @@ class UserRepositoryImpl implements UserRepository {
       }
 
       final UserSignedInModel userSignedIn =
-          await _userDatasource.googleSignIn();
+          await _userDatasource.signInWithGoogle();
 
       return Right(userSignedIn.toEntity());
     } on BaseException catch (exception) {
@@ -33,7 +33,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<BaseException, UserSignedInEntity>> emailPasswordSignIn(
+  Future<Either<BaseException, UserSignedInEntity>> signInWithCredentials(
       String email, String password) async {
     try {
       final bool hasNoConnection =
@@ -44,7 +44,7 @@ class UserRepositoryImpl implements UserRepository {
       }
 
       final UserSignedInModel userSignedIn =
-          await _userDatasource.emailPasswordSignIn(email, password);
+          await _userDatasource.signInWithCredentials(email, password);
 
       return Right(userSignedIn.toEntity());
     } on BaseException catch (exception) {

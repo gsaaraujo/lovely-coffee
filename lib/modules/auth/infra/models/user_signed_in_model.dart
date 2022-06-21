@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
+import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
 
 class UserSignedInModel extends UserSignedInEntity {
   const UserSignedInModel({

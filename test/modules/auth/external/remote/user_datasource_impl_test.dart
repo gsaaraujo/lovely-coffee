@@ -46,7 +46,8 @@ void main() {
           password: password,
         )).thenAnswer((_) async => MockUserCredential());
 
-    final response = await userDatasource.emailPasswordSignIn(email, password);
+    final response =
+        await userDatasource.signInWithCredentials(email, password);
 
     expect(response, isA<UserSignedInModel>());
   });
@@ -58,7 +59,7 @@ void main() {
         )).thenThrow(FirebaseAuthException(code: 'invalid-email'));
 
     final emailPasswordSignIn =
-        userDatasource.emailPasswordSignIn(email, password);
+        userDatasource.signInWithCredentials(email, password);
 
     expect(emailPasswordSignIn, throwsA(isA<InvalidEmailException>()));
   });
@@ -71,7 +72,7 @@ void main() {
         )).thenThrow(FirebaseAuthException(code: 'user-not-found'));
 
     final emailPasswordSignIn =
-        userDatasource.emailPasswordSignIn(email, password);
+        userDatasource.signInWithCredentials(email, password);
 
     expect(emailPasswordSignIn, throwsA(isA<InvalidCredentialsException>()));
   });
@@ -83,7 +84,7 @@ void main() {
         )).thenThrow(FirebaseAuthException(code: ''));
 
     final emailPasswordSignIn =
-        userDatasource.emailPasswordSignIn(email, password);
+        userDatasource.signInWithCredentials(email, password);
 
     expect(emailPasswordSignIn, throwsA(isA<UnknownException>()));
   });

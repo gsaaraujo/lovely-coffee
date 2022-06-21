@@ -1,18 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:lovely_coffee/core/exceptions/base_exception.dart';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
+import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
 import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.dart';
 
-abstract class UserEmailPasswordSignInUsecase {
+abstract class SignInWithCredentialsUsecase {
   Future<Either<BaseException, UserSignedInEntity>> call(
     String email,
     String password,
   );
 }
 
-class UserEmailPasswordSignInUsecaseImpl
-    implements UserEmailPasswordSignInUsecase {
-  UserEmailPasswordSignInUsecaseImpl(this._repository);
+class SignInWithCredentialsUsecaseImpl implements SignInWithCredentialsUsecase {
+  SignInWithCredentialsUsecaseImpl(this._repository);
 
   final UserRepository _repository;
 
@@ -21,6 +20,6 @@ class UserEmailPasswordSignInUsecaseImpl
     String email,
     String password,
   ) {
-    return _repository.emailPasswordSignIn(email, password);
+    return _repository.signInWithCredentials(email, password);
   }
 }

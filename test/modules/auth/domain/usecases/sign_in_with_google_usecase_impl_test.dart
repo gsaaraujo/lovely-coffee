@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovely_coffee/core/exceptions/base_exception.dart';
 import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.dart';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
-import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
+import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
+import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_google_usecase_impl.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}
 
@@ -12,7 +12,7 @@ class MockBaseException extends BaseException {}
 
 void main() {
   late UserRepository mockRepository;
-  late UserGoogleSignInUsecaseImpl usecase;
+  late SignInWithGoogleUsecaseImpl usecase;
 
   const fakeUserSignedIn = UserSignedInEntity(
     uid: 'abc-123',
@@ -24,11 +24,11 @@ void main() {
 
   setUp(() {
     mockRepository = MockUserRepository();
-    usecase = UserGoogleSignInUsecaseImpl(mockRepository);
+    usecase = SignInWithGoogleUsecaseImpl(mockRepository);
   });
 
   test('usecase should return a fakeUserSignedIn', () async {
-    when(() => mockRepository.googleSignIn())
+    when(() => mockRepository.signInWithGoogle())
         .thenAnswer((_) async => const Right(fakeUserSignedIn));
 
     final result = await usecase();
@@ -37,7 +37,7 @@ void main() {
   });
 
   test('usecase should return a MockBaseException', () async {
-    when(() => mockRepository.googleSignIn())
+    when(() => mockRepository.signInWithGoogle())
         .thenAnswer((_) async => Left(MockBaseException()));
 
     final result = await usecase();

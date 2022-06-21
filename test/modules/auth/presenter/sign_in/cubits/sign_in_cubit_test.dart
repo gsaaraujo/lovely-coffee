@@ -1,27 +1,27 @@
 import 'package:dartz/dartz.dart';
-import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
-import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
-import 'package:lovely_coffee/modules/auth/domain/exceptions/auth_exception.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovely_coffee/core/exceptions/base_exception.dart';
+import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/auth_exception.dart';
+import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_up_entity.dart';
+import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
 import 'package:lovely_coffee/application/models/user_secure_local_storage_model.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_cubit.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_states.dart';
 import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
-import 'package:lovely_coffee/modules/auth/domain/usecases/user_google_sign_in_usecase_impl.dart';
-import 'package:lovely_coffee/modules/auth/domain/usecases/user_email_password_sign_in_usecase_impl.dart';
+import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_google_usecase_impl.dart';
+import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_credentials_usecase_impl.dart';
 import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage_service.dart';
 
-class MockUserGoogleSignInUsecase extends Mock
-    implements UserGoogleSignInUsecase {}
+class MockSignInWithGoogleUsecase extends Mock
+    implements SignInWithGoogleUsecase {}
 
-class MockUserEmailPasswordSignInUsecase extends Mock
-    implements UserEmailPasswordSignInUsecase {}
+class MockSignInWithCredentialsUsecase extends Mock
+    implements SignInWithCredentialsUsecase {}
 
 class MockLocalStorage extends Mock implements LocalStorageService {}
 
@@ -33,8 +33,8 @@ class MockBaseException extends BaseException {}
 void main() {
   late SignInCubit cubit;
   late LocalStorageService mockLocalStorageService;
-  late UserGoogleSignInUsecase mockGoogleSignInUsecase;
-  late MockUserEmailPasswordSignInUsecase mockEmailPasswordSignInUsecase;
+  late SignInWithGoogleUsecase mockGoogleSignInUsecase;
+  late MockSignInWithCredentialsUsecase mockEmailPasswordSignInUsecase;
   late SecureLocalStorageService mockSecureLocalStorageService;
 
   const email = 'gabriel.houth@gmail.com';
@@ -60,8 +60,8 @@ void main() {
   );
 
   setUp(() {
-    mockGoogleSignInUsecase = MockUserGoogleSignInUsecase();
-    mockEmailPasswordSignInUsecase = MockUserEmailPasswordSignInUsecase();
+    mockGoogleSignInUsecase = MockSignInWithGoogleUsecase();
+    mockEmailPasswordSignInUsecase = MockSignInWithCredentialsUsecase();
     mockLocalStorageService = MockLocalStorage();
     mockSecureLocalStorageService = MockSecureLocalStorage();
 
@@ -90,7 +90,7 @@ void main() {
     });
 
     blocTest<SignInCubit, SignInStates>(
-      'googleSignIn() should emits [SignInLoadingState, SignInSucceedState]',
+      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInSucceedState]',
       build: () {
         when(() => mockGoogleSignInUsecase()).thenAnswer(
           (_) async => const Right(fakeUserSignedInEntity),
@@ -103,7 +103,7 @@ void main() {
     );
 
     blocTest<SignInCubit, SignInStates>(
-      'googleSignIn() should emits [SignInLoadingState, SignInFailedState(ExceptionMessagesConst.auth)]',
+      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInFailedState(ExceptionMessagesConst.auth)]',
       build: () {
         when(() => mockGoogleSignInUsecase()).thenAnswer(
           (_) async => Left(AuthException()),
@@ -119,7 +119,7 @@ void main() {
     );
 
     blocTest<SignInCubit, SignInStates>(
-      'googleSignIn() should emits [SignInLoadingState, SignInFailedState(noConnection)]',
+      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInFailedState(noConnection)]',
       build: () {
         when(() => mockGoogleSignInUsecase()).thenAnswer(
           (_) async => Left(NoDeviceConnectionException()),
@@ -135,7 +135,7 @@ void main() {
     );
 
     blocTest<SignInCubit, SignInStates>(
-      'googleSignIn() should emits [SignInLoadingState, SignInFailedState(unknown)]',
+      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInFailedState(unknown)]',
       build: () {
         when(() => mockGoogleSignInUsecase()).thenAnswer(
           (_) async => Left(UnknownException()),
