@@ -22,14 +22,6 @@ void main() {
   const email = 'gabriel.houth@gmail.com';
   const password = '123456';
 
-  const fakeUserSignedInModel = UserSignedInModel(
-    uid: 'abc-123',
-    imageUrl: 'www.imageUrl.com',
-    name: 'Gabriel',
-    accessToken: 'fsedf234432km4k3l2mn',
-    refreshToken: 'klopklopkpjkef903sdfsd',
-  );
-
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
     mockGoogleSignIn = MockGoogleSignIn();

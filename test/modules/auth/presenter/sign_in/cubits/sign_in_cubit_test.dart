@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_credentials_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_email_exception.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,18 +25,18 @@ class MockSignInWithGoogleUsecase extends Mock
 class MockSignInWithCredentialsUsecase extends Mock
     implements SignInWithCredentialsUsecase {}
 
-class MockLocalStorage extends Mock implements LocalStorageService {}
+class MockLocalStorageService extends Mock implements LocalStorageService {}
 
-class MockSecureLocalStorage extends Mock implements SecureLocalStorageService {
-}
+class MockSecureLocalStorageService extends Mock
+    implements SecureLocalStorageService {}
 
 class MockBaseException extends BaseException {}
 
 void main() {
   late SignInCubit cubit;
   late LocalStorageService mockLocalStorageService;
-  late SignInWithGoogleUsecase mockGoogleSignInUsecase;
-  late MockSignInWithCredentialsUsecase mockEmailPasswordSignInUsecase;
+  late SignInWithGoogleUsecase mockSignInWithGoogleUsecase;
+  late MockSignInWithCredentialsUsecase mockSignInWithCredentialsUsecase;
   late SecureLocalStorageService mockSecureLocalStorageService;
 
   const email = 'gabriel.houth@gmail.com';
@@ -60,14 +62,14 @@ void main() {
   );
 
   setUp(() {
-    mockGoogleSignInUsecase = MockSignInWithGoogleUsecase();
-    mockEmailPasswordSignInUsecase = MockSignInWithCredentialsUsecase();
-    mockLocalStorageService = MockLocalStorage();
-    mockSecureLocalStorageService = MockSecureLocalStorage();
+    mockSignInWithGoogleUsecase = MockSignInWithGoogleUsecase();
+    mockSignInWithCredentialsUsecase = MockSignInWithCredentialsUsecase();
+    mockLocalStorageService = MockLocalStorageService();
+    mockSecureLocalStorageService = MockSecureLocalStorageService();
 
     cubit = SignInCubit(
-      mockGoogleSignInUsecase,
-      mockEmailPasswordSignInUsecase,
+      mockSignInWithGoogleUsecase,
+      mockSignInWithCredentialsUsecase,
       mockLocalStorageService,
       mockSecureLocalStorageService,
     );
@@ -90,28 +92,34 @@ void main() {
     });
 
     blocTest<SignInCubit, SignInStates>(
-      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInSucceedState]',
+      'googleSignIn should emits [SignInLoadingState, SignInSucceedState]',
       build: () {
-        when(() => mockGoogleSignInUsecase()).thenAnswer(
+        when(() => mockSignInWithGoogleUsecase()).thenAnswer(
           (_) async => const Right(fakeUserSignedInEntity),
         );
 
         return cubit;
       },
-      act: (cubit) => cubit.googleSignIn(),
+      act: (cubit) {
+        cubit.signInWithGoogle();
+        verify(() => mockSignInWithGoogleUsecase());
+      },
       expect: () => [isA<SignInLoadingState>(), isA<SignInSucceedState>()],
     );
 
     blocTest<SignInCubit, SignInStates>(
-      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInFailedState(ExceptionMessagesConst.auth)]',
+      'googleSignIn should emits [SignInLoadingState, SignInFailedState(auth)]',
       build: () {
-        when(() => mockGoogleSignInUsecase()).thenAnswer(
+        when(() => mockSignInWithGoogleUsecase()).thenAnswer(
           (_) async => Left(AuthException()),
         );
 
         return cubit;
       },
-      act: (cubit) => cubit.googleSignIn(),
+      act: (cubit) {
+        cubit.signInWithGoogle();
+        verify(() => mockSignInWithGoogleUsecase());
+      },
       expect: () => [
         isA<SignInLoadingState>(),
         SignInFailedState(message: ExceptionMessagesConst.auth),
@@ -119,15 +127,18 @@ void main() {
     );
 
     blocTest<SignInCubit, SignInStates>(
-      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInFailedState(noConnection)]',
+      'googleSignIn should emits [SignInLoadingState, SignInFailedState(noConnection)]',
       build: () {
-        when(() => mockGoogleSignInUsecase()).thenAnswer(
+        when(() => mockSignInWithGoogleUsecase()).thenAnswer(
           (_) async => Left(NoDeviceConnectionException()),
         );
 
         return cubit;
       },
-      act: (cubit) => cubit.googleSignIn(),
+      act: (cubit) {
+        cubit.signInWithGoogle();
+        verify(() => mockSignInWithGoogleUsecase());
+      },
       expect: () => [
         isA<SignInLoadingState>(),
         SignInFailedState(message: ExceptionMessagesConst.noConnection),
@@ -135,19 +146,116 @@ void main() {
     );
 
     blocTest<SignInCubit, SignInStates>(
-      'SignInWithGoogleUsecase() should emits [SignInLoadingState, SignInFailedState(unknown)]',
+      'googleSignIn should emits [SignInLoadingState, SignInFailedState(unknown)]',
       build: () {
-        when(() => mockGoogleSignInUsecase()).thenAnswer(
+        when(() => mockSignInWithGoogleUsecase()).thenAnswer(
           (_) async => Left(UnknownException()),
         );
 
         return cubit;
       },
-      act: (cubit) => cubit.googleSignIn(),
+      act: (cubit) {
+        cubit.signInWithGoogle();
+        verify(() => mockSignInWithGoogleUsecase());
+      },
       expect: () => [
         isA<SignInLoadingState>(),
         SignInFailedState(message: ExceptionMessagesConst.unknown),
       ],
     );
   });
+
+  ///////////
+
+  blocTest<SignInCubit, SignInStates>(
+    'signInWithCredentials should emits [SignInLoadingState, SignInSucceedState]',
+    build: () {
+      when(() => mockSignInWithCredentialsUsecase(email, password)).thenAnswer(
+        (_) async => const Right(fakeUserSignedInEntity),
+      );
+
+      return cubit;
+    },
+    act: (cubit) {
+      cubit.signInWithCredentials(email, password);
+      verify(() => mockSignInWithCredentialsUsecase(email, password));
+    },
+    expect: () => [isA<SignInLoadingState>(), isA<SignInSucceedState>()],
+  );
+
+  blocTest<SignInCubit, SignInStates>(
+    'signInWithCredentials should emits [SignInLoadingState, SignInFailedState(incorrectCredentials)]',
+    build: () {
+      when(() => mockSignInWithCredentialsUsecase(email, password)).thenAnswer(
+        (_) async => Left(InvalidCredentialsException()),
+      );
+
+      return cubit;
+    },
+    act: (cubit) {
+      cubit.signInWithCredentials(email, password);
+      verify(() => mockSignInWithCredentialsUsecase(email, password));
+    },
+    expect: () => [
+      isA<SignInLoadingState>(),
+      SignInFailedState(message: ExceptionMessagesConst.incorrectCredentials),
+    ],
+  );
+
+  blocTest<SignInCubit, SignInStates>(
+    'signInWithCredentials should emits [SignInLoadingState, SignInFailedState(incorrectCredentials)]',
+    build: () {
+      when(() => mockSignInWithCredentialsUsecase(email, password)).thenAnswer(
+        (_) async => Left(InvalidEmailException()),
+      );
+
+      return cubit;
+    },
+    act: (cubit) {
+      cubit.signInWithCredentials(email, password);
+      verify(() => mockSignInWithCredentialsUsecase(email, password));
+    },
+    expect: () => [
+      isA<SignInLoadingState>(),
+      SignInFailedState(message: ExceptionMessagesConst.invalidEmail),
+    ],
+  );
+
+  blocTest<SignInCubit, SignInStates>(
+    'signInWithCredentials should emits [SignInLoadingState, SignInFailedState(noConnection)]',
+    build: () {
+      when(() => mockSignInWithCredentialsUsecase(email, password)).thenAnswer(
+        (_) async => Left(NoDeviceConnectionException()),
+      );
+
+      return cubit;
+    },
+    act: (cubit) {
+      cubit.signInWithCredentials(email, password);
+      verify(() => mockSignInWithCredentialsUsecase(email, password));
+    },
+    expect: () => [
+      isA<SignInLoadingState>(),
+      SignInFailedState(message: ExceptionMessagesConst.noConnection),
+    ],
+  );
+
+  blocTest<SignInCubit, SignInStates>(
+    'signInWithCredentials should emits [SignInLoadingState, SignInFailedState(unknown)]',
+    build: () {
+      when(() => mockSignInWithCredentialsUsecase(email, password)).thenAnswer(
+        (_) async => Left(UnknownException()),
+      );
+
+      return cubit;
+    },
+    act: (cubit) {
+      cubit.signInWithCredentials(email, password);
+      verify(() => mockSignInWithCredentialsUsecase(email, password));
+    },
+    expect: () => [
+      isA<SignInLoadingState>(),
+      SignInFailedState(message: ExceptionMessagesConst.unknown),
+    ],
+  );
 }

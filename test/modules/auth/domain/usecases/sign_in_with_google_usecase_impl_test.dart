@@ -12,7 +12,7 @@ class MockBaseException extends BaseException {}
 
 void main() {
   late UserRepository mockRepository;
-  late SignInWithGoogleUsecaseImpl usecase;
+  late SignInWithGoogleUsecase usecase;
 
   const fakeUserSignedIn = UserSignedInEntity(
     uid: 'abc-123',
@@ -27,21 +27,23 @@ void main() {
     usecase = SignInWithGoogleUsecaseImpl(mockRepository);
   });
 
-  test('usecase should return a fakeUserSignedIn', () async {
+  test('usecase should return a UserSignedInEntity', () async {
     when(() => mockRepository.signInWithGoogle())
         .thenAnswer((_) async => const Right(fakeUserSignedIn));
 
     final result = await usecase();
 
+    verify(() => mockRepository.signInWithGoogle());
     expect(result.fold(id, id), fakeUserSignedIn);
   });
 
-  test('usecase should return a MockBaseException', () async {
+  test('usecase should return a BaseException', () async {
     when(() => mockRepository.signInWithGoogle())
         .thenAnswer((_) async => Left(MockBaseException()));
 
     final result = await usecase();
 
+    verify(() => mockRepository.signInWithGoogle());
     expect(result.fold(id, id), MockBaseException());
   });
 }

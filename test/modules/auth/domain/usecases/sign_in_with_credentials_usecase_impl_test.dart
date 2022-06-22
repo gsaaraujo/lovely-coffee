@@ -12,7 +12,7 @@ class MockBaseException extends BaseException {}
 
 void main() {
   late MockUserRepository mockRepository;
-  late SignInWithCredentialsUsecaseImpl usecase;
+  late SignInWithCredentialsUsecase usecase;
 
   const email = 'gabriel.houth@gmail.com';
   const password = '123456';
@@ -30,21 +30,23 @@ void main() {
     usecase = SignInWithCredentialsUsecaseImpl(mockRepository);
   });
 
-  test('usecase should return a fakeUserSignedInEntity', () async {
+  test('usecase should return a UserSignedInEntity', () async {
     when(() => mockRepository.signInWithCredentials(email, password))
         .thenAnswer((_) async => const Right(fakeUserSignedInEntity));
 
     final response = await usecase(email, password);
 
+    verify(() => mockRepository.signInWithCredentials(email, password));
     expect(response.fold(id, id), fakeUserSignedInEntity);
   });
 
-  test('usecase should return a fakeUserSignedInEntity', () async {
+  test('usecase should return a BaseException', () async {
     when(() => mockRepository.signInWithCredentials(email, password))
         .thenAnswer((_) async => Left(MockBaseException()));
 
     final response = await usecase(email, password);
 
+    verify(() => mockRepository.signInWithCredentials(email, password));
     expect(response.fold(id, id), MockBaseException());
   });
 }

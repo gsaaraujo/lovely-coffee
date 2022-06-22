@@ -15,21 +15,21 @@ import 'package:lovely_coffee/application/services/secure_local_storage/secure_l
 
 class SignInCubit extends Cubit<SignInStates> {
   SignInCubit(
-    this._googleSignInUsecase,
-    this._emailPasswordUsecase,
-    this._localStorage,
-    this._secureLocalStorage,
+    this._signInWithGoogleUsecase,
+    this._signInWithCredentialsUsecase,
+    this._localStorageService,
+    this._secureLocalStorageService,
   ) : super(SignInInitialState());
 
-  final SignInWithGoogleUsecase _googleSignInUsecase;
-  final SignInWithCredentialsUsecase _emailPasswordUsecase;
-  final LocalStorageService _localStorage;
-  final SecureLocalStorageService _secureLocalStorage;
+  final SignInWithGoogleUsecase _signInWithGoogleUsecase;
+  final SignInWithCredentialsUsecase _signInWithCredentialsUsecase;
+  final LocalStorageService _localStorageService;
+  final SecureLocalStorageService _secureLocalStorageService;
 
-  void googleSignIn() async {
+  void signInWithGoogle() async {
     emit(SignInLoadingState());
 
-    final userSignedInEntity = await _googleSignInUsecase();
+    final userSignedInEntity = await _signInWithGoogleUsecase();
 
     userSignedInEntity.fold(
       (exception) {
@@ -60,8 +60,8 @@ class SignInCubit extends Cubit<SignInStates> {
           refreshToken: userSignedInEntity.refreshToken,
         );
 
-        _localStorage.addUser(userLocalStorage);
-        _secureLocalStorage.addTokens(userSecureLocalStorage);
+        _localStorageService.addUser(userLocalStorage);
+        _secureLocalStorageService.addTokens(userSecureLocalStorage);
 
         emit(SignInSucceedState());
       },
@@ -70,8 +70,8 @@ class SignInCubit extends Cubit<SignInStates> {
 
   void signInWithCredentials(String email, String password) async {
     emit(SignInLoadingState());
-
-    final userSignedInEntity = await _emailPasswordUsecase(email, password);
+    final userSignedInEntity =
+        await _signInWithCredentialsUsecase(email, password);
 
     userSignedInEntity.fold(
       (exception) {
@@ -109,8 +109,8 @@ class SignInCubit extends Cubit<SignInStates> {
           refreshToken: userSignedInEntity.refreshToken,
         );
 
-        _localStorage.addUser(userLocalStorage);
-        _secureLocalStorage.addTokens(userSecureLocalStorage);
+        _localStorageService.addUser(userLocalStorage);
+        _secureLocalStorageService.addTokens(userSecureLocalStorage);
 
         emit(SignInSucceedState());
       },

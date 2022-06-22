@@ -29,7 +29,10 @@ void main() {
 
         return cubit;
       },
-      act: (cubit) => cubit.redirectUser(),
+      act: (cubit) {
+        cubit.redirectUser();
+        verify(() => mockUsecase());
+      },
       expect: () => [
         isA<SplashLoadingState>(),
         isA<SplashRedirectToHomeState>(),
@@ -43,7 +46,10 @@ void main() {
 
         return cubit;
       },
-      act: (cubit) => cubit.redirectUser(),
+      act: (cubit) {
+        cubit.redirectUser();
+        verify(() => mockUsecase());
+      },
       expect: () => [
         isA<SplashLoadingState>(),
         isA<SplashRedirectToSignInState>(),

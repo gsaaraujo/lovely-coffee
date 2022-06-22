@@ -7,6 +7,7 @@ import 'package:lovely_coffee/modules/auth/domain/exceptions/auth_exception.dart
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
 import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dart';
 import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/repositories/user_repository.dart';
 import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
 import 'package:lovely_coffee/modules/auth/infra/repositories/user_repository_impl.dart';
 import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_email_exception.dart';
@@ -21,7 +22,7 @@ class MockDeviceConnectivityService extends Mock
     implements DeviceConnectivityService {}
 
 void main() {
-  late UserRepositoryImpl repository;
+  late UserRepository repository;
   late UserDatasource mockDatasource;
   late DeviceConnectivityService mockDeviceConnectivityService;
 
@@ -53,7 +54,7 @@ void main() {
     );
   });
 
-  test('googleSignIn should return fakeUserSignedInEntity', () async {
+  test('googleSignIn should return a UserSignedInEntity', () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
 
@@ -62,6 +63,8 @@ void main() {
 
     final userSignedIn = await repository.signInWithGoogle();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.signInWithGoogle());
     expect(userSignedIn.fold(id, id), fakeUserSignedInEntity);
   });
 
@@ -71,6 +74,7 @@ void main() {
 
     final userSignedIn = await repository.signInWithGoogle();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
     expect(userSignedIn.fold(id, id), NoDeviceConnectionException());
   });
 
@@ -82,6 +86,8 @@ void main() {
 
     final userSignedIn = await repository.signInWithGoogle();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.signInWithGoogle());
     expect(userSignedIn.fold(id, id), AuthException());
   });
 
@@ -93,12 +99,14 @@ void main() {
 
     final userSignedIn = await repository.signInWithGoogle();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.signInWithGoogle());
     expect(userSignedIn.fold(id, id), UnknownException());
   });
 
-  ///
+  //////////
 
-  test('emailPasswordSignIn should return NoDeviceConnectionException',
+  test('signInWithCredentials should return NoDeviceConnectionException',
       () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => false);
@@ -106,10 +114,11 @@ void main() {
     final userSignedIn =
         await repository.signInWithCredentials(email, password);
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
     expect(userSignedIn.fold(id, id), NoDeviceConnectionException());
   });
 
-  test('emailPasswordSignIn should return InvalidEmailException', () async {
+  test('signInWithCredentials should return InvalidEmailException', () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
 
@@ -119,10 +128,12 @@ void main() {
     final userSignedIn =
         await repository.signInWithCredentials(email, password);
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.signInWithCredentials(email, password));
     expect(userSignedIn.fold(id, id), InvalidEmailException());
   });
 
-  test('emailPasswordSignIn should return InvalidCredentialsException',
+  test('signInWithCredentials should return InvalidCredentialsException',
       () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
@@ -133,10 +144,12 @@ void main() {
     final userSignedIn =
         await repository.signInWithCredentials(email, password);
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.signInWithCredentials(email, password));
     expect(userSignedIn.fold(id, id), InvalidCredentialsException());
   });
 
-  test('emailPasswordSignIn should return UnknownException', () async {
+  test('signInWithCredentials should return UnknownException', () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
 
@@ -146,6 +159,8 @@ void main() {
     final userSignedIn =
         await repository.signInWithCredentials(email, password);
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.signInWithCredentials(email, password));
     expect(userSignedIn.fold(id, id), UnknownException());
   });
 }
