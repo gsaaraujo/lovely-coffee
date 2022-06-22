@@ -22,6 +22,7 @@ void main() {
   setUp(() {
     mockDatasource = MockProductsDatasource();
     mockDeviceConnectivityService = MockDeviceConnectivityService();
+
     repository = ProductsRepositoryImpl(
       mockDatasource,
       mockDeviceConnectivityService,
@@ -55,6 +56,8 @@ void main() {
 
     final productList = await repository.findAllProducts();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.findAllProducts());
     expect(productList.fold(id, id), [fakeProductEntity]);
   });
 
@@ -64,6 +67,7 @@ void main() {
 
     final productList = await repository.findAllProducts();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
     expect(productList.fold(id, id), NoDeviceConnectionException());
   });
 
@@ -75,6 +79,8 @@ void main() {
 
     final productList = await repository.findAllProducts();
 
+    verify(() => mockDeviceConnectivityService.hasDeviceConnection());
+    verify(() => mockDatasource.findAllProducts());
     expect(productList.fold(id, id), UnknownException());
   });
 }

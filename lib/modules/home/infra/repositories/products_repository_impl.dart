@@ -1,12 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
 import 'package:lovely_coffee/core/exceptions/base_exception.dart';
-import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
-import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/models/product_model.dart';
 import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
+import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/datasources/products_datasource.dart';
 import 'package:lovely_coffee/modules/home/domain/repositories/products_repository.dart';
+import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
 
 class ProductsRepositoryImpl implements ProductsRepository {
   ProductsRepositoryImpl(this._productsDatasource, this._connectivityService);

@@ -11,11 +11,17 @@ class ProductsDatasourceImpl implements ProductsDatasource {
   @override
   Future<List<ProductModel>> findAllProducts({String? filter}) async {
     try {
-      final document =
-          await _firestore.collection('products').where('', whereIn: []).get();
+      Query<Map<String, dynamic>> document = _firestore.collection('products');
 
-      final productList =
-          document.docs.map((doc) => ProductModel.fromMap(doc.data())).toList();
+      if (filter != null) {
+        document = document.where(filter);
+      }
+
+      final documentGet = await document.get();
+
+      final productList = documentGet.docs
+          .map((doc) => ProductModel.fromMap(doc.data()))
+          .toList();
 
       return productList;
     } catch (exception, stackTrace) {

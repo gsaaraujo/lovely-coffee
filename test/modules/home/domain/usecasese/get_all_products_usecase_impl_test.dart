@@ -34,15 +34,17 @@ void main() {
 
     final productList = await usecase();
 
+    verify(() => repository.findAllProducts());
     expect(productList.fold(id, id), isA<List<ProductEntity>>());
   });
 
-  test('usecase should return a Failure', () async {
+  test('usecase should return a BaseException', () async {
     when(() => repository.findAllProducts())
         .thenAnswer((_) async => Left(MockBaseException()));
 
     final productList = await usecase();
 
-    expect(productList.fold(id, id), isA<BaseException>());
+    verify(() => repository.findAllProducts());
+    expect(productList.fold(id, id), MockBaseException());
   });
 }
