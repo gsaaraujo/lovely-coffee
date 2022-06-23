@@ -9,4 +9,10 @@ abstract class UserRepository {
     String email,
     String password,
   );
+
+  Future<Either<BaseException, void>> signUp(
+    String name,
+    String email,
+    String password,
+  );
 }

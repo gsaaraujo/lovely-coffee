@@ -51,4 +51,23 @@ class UserRepositoryImpl implements UserRepository {
       return Left(exception);
     }
   }
+
+  @override
+  Future<Either<BaseException, void>> signUp(
+      String name, String email, String password) async {
+    try {
+      final bool hasNoConnection =
+          !(await _connectivityService.hasDeviceConnection());
+
+      if (hasNoConnection) {
+        return Left(NoDeviceConnectionException());
+      }
+
+      await _userDatasource.signUp(name, email, password);
+
+      return const Right(null);
+    } on BaseException catch (exception) {
+      return Left(exception);
+    }
+  }
 }

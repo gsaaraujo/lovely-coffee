@@ -46,6 +46,8 @@ void main() {
         .thenAnswer((_) => querySnapshot);
 
     final productsList = await datasource.findAllProducts();
+
+    verify(() => firestore.collection('products'));
     expect(productsList, [product]);
   });
 
@@ -54,6 +56,7 @@ void main() {
 
     final productsList = datasource.findAllProducts();
 
+    verify(() => firestore.collection('products'));
     expect(productsList, throwsA(isA<UnknownException>()));
   });
 }

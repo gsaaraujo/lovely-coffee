@@ -6,6 +6,8 @@ import 'package:lovely_coffee/modules/auth/infra/datasources/user_datasource.dar
 import 'package:lovely_coffee/modules/auth/infra/models/user_signed_in_model.dart';
 import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_email_exception.dart';
 import 'package:lovely_coffee/modules/auth/domain/exceptions/invalid_credentials_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/email_already_in_use_exception.dart';
+import 'package:lovely_coffee/modules/auth/domain/exceptions/password_is_too_weak_exception.dart';
 
 class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(
@@ -81,6 +83,44 @@ class UserDatasourceImpl implements UserDatasource {
       if (exception.code == 'user-not-found' ||
           exception.code == 'wrong-password') {
         throw InvalidCredentialsException(
+          stackTrace: stackTrace,
+          errorMessage: exception.message,
+        );
+      }
+
+      throw UnknownException(
+        stackTrace: stackTrace,
+        errorMessage: exception.message,
+      );
+    } catch (exception, stackTrace) {
+      throw UnknownException(stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<void> signUp(String name, String email, String password) async {
+    try {
+      await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (exception, stackTrace) {
+      if (exception.code == 'invalid-email') {
+        throw InvalidEmailException(
+          stackTrace: stackTrace,
+          errorMessage: exception.message,
+        );
+      }
+
+      if (exception.code == 'email-already-in-use') {
+        throw EmailAlreadyInUseException(
+          stackTrace: stackTrace,
+          errorMessage: exception.message,
+        );
+      }
+
+      if (exception.code == 'weak-password') {
+        throw PasswordIsTooWeakException(
           stackTrace: stackTrace,
           errorMessage: exception.message,
         );
