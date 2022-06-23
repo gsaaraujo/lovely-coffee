@@ -24,6 +24,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
       if (hasNoConnection) {
         return Left(NoDeviceConnectionException());
       }
+
       final List<ProductModel> productList =
           await _productsDatasource.findAllProducts();
 
