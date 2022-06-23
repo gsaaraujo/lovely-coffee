@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/datasources/favorite_products_datasource.dart';
+import 'package:lovely_coffee/modules/home/infra/models/favorite_product_model.dart';
 
 class FavoriteProductsDatasourceImpl implements FavoriteProductsDatasource {
   FavoriteProductsDatasourceImpl(this._firestore);
@@ -28,6 +29,25 @@ class FavoriteProductsDatasourceImpl implements FavoriteProductsDatasource {
       }
 
       await documents.docs.first.reference.delete();
+    } catch (exception, stackTrace) {
+      throw UnknownException(stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<List<FavoriteProductModel>> findAllFavoriteProductsByUserId(
+      String userId) async {
+    try {
+      final documents = await _firestore
+          .collection('favorite-products')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      final favoriteProductList = documents.docs
+          .map((document) => FavoriteProductModel.fromMap(document.data()))
+          .toList();
+
+      return favoriteProductList;
     } catch (exception, stackTrace) {
       throw UnknownException(stackTrace: stackTrace);
     }
