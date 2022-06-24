@@ -44,3 +44,13 @@ flutter:
 
   assets:
     - assets/animations/
+
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400

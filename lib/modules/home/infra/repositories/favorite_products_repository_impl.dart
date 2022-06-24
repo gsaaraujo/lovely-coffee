@@ -5,7 +5,6 @@ import 'package:lovely_coffee/modules/home/domain/entities/favorite_product_enti
 import 'package:lovely_coffee/modules/home/infra/datasources/favorite_products_datasource.dart';
 import 'package:lovely_coffee/modules/home/domain/repositories/favorite_products_repository.dart';
 import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
-import 'package:lovely_coffee/modules/home/infra/models/favorite_product_model.dart';
 
 class FavoriteProductsRepositoryImpl implements FavoriteProductsRepository {
   FavoriteProductsRepositoryImpl(this._datasource, this._connectivityService);
