@@ -1,3 +1,4 @@
+import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
@@ -6,7 +7,9 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(),
+      body: Center(
+        child: Lottie.asset('assets/animations/splash.json'),
+      ),
     );
   }
 }
