@@ -6,7 +6,7 @@ class LocalStorageServiceImpl implements LocalStorageService {
   final HiveInterface _hive = Hive;
 
   @override
-  Future<void> addUser(UserLocalStorageModel userLocalStorage) async {
+  Future<void> addUser(UserLocalStorageEntity userLocalStorage) async {
     final box = await _hive.openBox('USER_BOX');
     box.put('USER', userLocalStorage.toMap());
   }
@@ -18,17 +18,15 @@ class LocalStorageServiceImpl implements LocalStorageService {
   }
 
   @override
-  Future<UserLocalStorageModel?> getUser() async {
+  Future<UserLocalStorageEntity> getUser() async {
     final box = await _hive.openBox('USER_BOX');
-    final Map<String, dynamic>? userMap = box.get('USER');
+    final Map<String, dynamic> userMap = box.get('USER');
 
-    if (userMap == null) return null;
-
-    return UserLocalStorageModel.fromMap(userMap);
+    return UserLocalStorageEntity.fromMap(userMap);
   }
 
   @override
-  Future<void> updateUser(UserLocalStorageModel userLocalStorage) async {
+  Future<void> updateUser(UserLocalStorageEntity userLocalStorage) async {
     final box = await _hive.openBox('USER_BOX');
     box.put('USER', userLocalStorage.toMap());
   }

@@ -4,9 +4,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:lovely_coffee/application/styles/color_styles.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
-import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
 import 'package:lovely_coffee/application/widgets/snack_bar_widget.dart';
-import 'package:lovely_coffee/application/widgets/text_input_field_widget.dart';
+import 'package:lovely_coffee/application/widgets/text_form_field_widget.dart';
+import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
 import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_up/cubits/sign_up_cubit.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_up/cubits/sign_up_states.dart';
@@ -69,12 +69,12 @@ class _SignUpPageState extends State<SignUpPage> {
                         const Text('Sign up',
                             style: HeadingStyles.heading32Bold),
                         const SizedBox(height: 70),
-                        TextInputFieldWidget(
+                        TextFormFieldWidget(
                           hint: 'Your name',
                           controller: _nameController,
                         ),
                         const SizedBox(height: 30),
-                        TextInputFieldWidget(
+                        TextFormFieldWidget(
                           hint: 'Your email',
                           controller: _emailController,
                           validator: (String email) {
@@ -87,7 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           },
                         ),
                         const SizedBox(height: 30),
-                        TextInputFieldWidget(
+                        TextFormFieldWidget(
                           hint: 'Your password',
                           controller: _passwordController,
                           isPassword: true,

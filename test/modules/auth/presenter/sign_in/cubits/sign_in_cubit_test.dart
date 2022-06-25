@@ -50,13 +50,13 @@ void main() {
     refreshToken: 'klopklopkpjkef903sdfsd',
   );
 
-  const fakeUserLocalStorage = UserLocalStorageModel(
+  const fakeUserLocalStorage = UserLocalStorageEntity(
     uid: 'abc-123',
     imageUrl: 'www.imageUrl.com',
     name: 'Gabriel',
   );
 
-  const fakeUserSecureLocalStorage = UserSecureLocalStorageModel(
+  const fakeUserSecureLocalStorage = UserSecureLocalStorageEntity(
     accessToken: 'fsedf234432km4k3l2mn',
     refreshToken: 'klopklopkpjkef903sdfsd',
   );

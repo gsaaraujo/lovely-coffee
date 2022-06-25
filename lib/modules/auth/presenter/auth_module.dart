@@ -11,6 +11,7 @@ import 'package:lovely_coffee/modules/auth/presenter/sign_in/ui/pages/sign_in_pa
 import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_google_usecase_impl.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/sign_in_with_credentials_usecase_impl.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/check_if_user_is_already_signed_in_usecase_impl.dart';
+import 'package:lovely_coffee/modules/home/presenter/home_module.dart';
 
 class AuthModule extends Module {
   @override
@@ -36,5 +37,6 @@ class AuthModule extends Module {
         ChildRoute('/', child: (context, args) => const SplashPage()),
         ChildRoute('/sign-in', child: (context, args) => const SignInPage()),
         ChildRoute('/sign-up', child: (context, args) => const SignUpPage()),
+        ModuleRoute('/home', module: HomeModule())
       ];
 }

@@ -8,9 +8,9 @@ abstract class GetAllUserFavoriteProductsUsecase {
       getAllUserFavoriteProductsUsecase(String userId);
 }
 
-class GetAllFavoriteProductsUsecaseImpl
+class GetAllUserFavoriteProductsUsecaseImpl
     implements GetAllUserFavoriteProductsUsecase {
-  GetAllFavoriteProductsUsecaseImpl(this._repository);
+  GetAllUserFavoriteProductsUsecaseImpl(this._repository);
 
   final FavoriteProductsRepository _repository;
 

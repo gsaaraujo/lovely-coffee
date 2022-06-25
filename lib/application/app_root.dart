@@ -10,8 +10,8 @@ class AppRoot extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Color(0XFFD17843),
-        systemNavigationBarColor: Color(0XFFD17843),
+        statusBarColor: Color(0XFF424242),
+        systemNavigationBarColor: Color(0XFF424242),
       ),
     );
 

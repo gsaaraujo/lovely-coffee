@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lovely_coffee/application/styles/color_styles.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
 
@@ -8,9 +9,12 @@ ThemeData themeStyles() {
     appBarTheme: const AppBarTheme(
       elevation: 0,
       backgroundColor: Colors.white,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
       iconTheme: IconThemeData(color: Color(0XFF424242)),
     ),
     inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
       prefixIconColor: ColorStyles.textFieldIcon,
       suffixIconColor: ColorStyles.textFieldIcon,
       errorStyle: HeadingStyles.heading14Bold.copyWith(

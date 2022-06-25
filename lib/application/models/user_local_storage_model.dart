@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class UserLocalStorageModel extends Equatable {
-  const UserLocalStorageModel({
+class UserLocalStorageEntity extends Equatable {
+  const UserLocalStorageEntity({
     required this.uid,
     this.imageUrl,
     required this.name,
@@ -11,8 +11,8 @@ class UserLocalStorageModel extends Equatable {
   final String? imageUrl;
   final String name;
 
-  factory UserLocalStorageModel.fromMap(Map<String, dynamic> map) {
-    return UserLocalStorageModel(
+  factory UserLocalStorageEntity.fromMap(Map<String, dynamic> map) {
+    return UserLocalStorageEntity(
       uid: map['uid'] ?? '',
       imageUrl: map['imageUrl'],
       name: map['name'] ?? '',

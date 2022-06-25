@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:lovely_coffee/application/styles/color_styles.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
 import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
-import 'package:lovely_coffee/application/widgets/text_input_field_widget.dart';
+import 'package:lovely_coffee/application/widgets/text_form_field_widget.dart';
 import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_cubit.dart';
 import 'package:lovely_coffee/modules/auth/presenter/sign_in/cubits/sign_in_states.dart';
@@ -36,7 +36,9 @@ class _SignInPageState extends State<SignInPage> {
     return BlocListener<SignInCubit, SignInStates>(
       bloc: _signInCubit,
       listener: (context, state) {
-        Modular.to.navigate('/sign-in');
+        if (state is SignInSucceedState) {
+          Modular.to.navigate('/home');
+        }
       },
       child: WillPopScope(
         onWillPop: () async => false,
@@ -58,12 +60,12 @@ class _SignInPageState extends State<SignInPage> {
                           const Text('Sign in',
                               style: HeadingStyles.heading32Bold),
                           const SizedBox(height: 70),
-                          TextInputFieldWidget(
+                          TextFormFieldWidget(
                             controller: _emailController,
                             hint: 'Your email',
                           ),
                           const SizedBox(height: 30),
-                          TextInputFieldWidget(
+                          TextFormFieldWidget(
                             controller: _passwordController,
                             hint: 'Your password',
                             isPassword: true,

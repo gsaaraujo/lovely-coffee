@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
-class UserSecureLocalStorageModel extends Equatable {
-  const UserSecureLocalStorageModel({
+class UserSecureLocalStorageEntity extends Equatable {
+  const UserSecureLocalStorageEntity({
     required this.accessToken,
     required this.refreshToken,
   });
@@ -17,8 +17,8 @@ class UserSecureLocalStorageModel extends Equatable {
     };
   }
 
-  factory UserSecureLocalStorageModel.fromMap(Map<String, dynamic> map) {
-    return UserSecureLocalStorageModel(
+  factory UserSecureLocalStorageEntity.fromMap(Map<String, dynamic> map) {
+    return UserSecureLocalStorageEntity(
       accessToken: map['accessToken'] ?? '',
       refreshToken: map['refreshToken'] ?? '',
     );
@@ -26,8 +26,8 @@ class UserSecureLocalStorageModel extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  factory UserSecureLocalStorageModel.fromJson(String source) =>
-      UserSecureLocalStorageModel.fromMap(json.decode(source));
+  factory UserSecureLocalStorageEntity.fromJson(String source) =>
+      UserSecureLocalStorageEntity.fromMap(json.decode(source));
 
   @override
   List<Object?> get props => [accessToken, refreshToken];

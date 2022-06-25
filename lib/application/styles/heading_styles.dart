@@ -24,6 +24,12 @@ class HeadingStyles {
     color: ColorStyles.heading1,
   );
 
+  static const heading18Normal = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.normal,
+    color: ColorStyles.heading1,
+  );
+
   // Heading medium
 
   static const heading12Medium = TextStyle(
@@ -60,6 +66,18 @@ class HeadingStyles {
 
   static const heading16Bold = TextStyle(
     fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: ColorStyles.heading1,
+  );
+
+  static const heading18Bold = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: ColorStyles.heading1,
+  );
+
+  static const heading20Bold = TextStyle(
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     color: ColorStyles.heading1,
   );

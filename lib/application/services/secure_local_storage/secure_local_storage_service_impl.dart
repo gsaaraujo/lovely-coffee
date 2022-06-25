@@ -7,7 +7,7 @@ class SecureLocalStorageServiceImpl implements SecureLocalStorageService {
 
   @override
   Future<void> addTokens(
-    UserSecureLocalStorageModel userSecureLocalStorage,
+    UserSecureLocalStorageEntity userSecureLocalStorage,
   ) async {
     _secureStorage.write(
       key: 'USER_TOKENS',
@@ -21,18 +21,18 @@ class SecureLocalStorageServiceImpl implements SecureLocalStorageService {
   }
 
   @override
-  Future<UserSecureLocalStorageModel?> getTokens() async {
+  Future<UserSecureLocalStorageEntity?> getTokens() async {
     final String? userTokensJson =
         await _secureStorage.read(key: 'USER_TOKENS');
 
     if (userTokensJson == null) return null;
 
-    return UserSecureLocalStorageModel.fromJson(userTokensJson);
+    return UserSecureLocalStorageEntity.fromJson(userTokensJson);
   }
 
   @override
   Future<void> updateTokens(
-    UserSecureLocalStorageModel userSecureLocalStorage,
+    UserSecureLocalStorageEntity userSecureLocalStorage,
   ) async {
     _secureStorage.write(
       key: 'USER_TOKENS',

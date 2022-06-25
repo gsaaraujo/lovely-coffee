@@ -20,6 +20,7 @@ class SplashPage extends StatelessWidget {
         bloc: splashCubit,
         listener: (context, state) {
           if (state is SplashRedirectToHomeState) {
+            Modular.to.navigate('/home');
             return;
           }
 

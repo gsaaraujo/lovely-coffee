@@ -49,13 +49,13 @@ class SignInCubit extends Cubit<SignInStates> {
         }
       },
       (userSignedInEntity) {
-        final userLocalStorage = UserLocalStorageModel(
+        final userLocalStorage = UserLocalStorageEntity(
           uid: userSignedInEntity.uid,
           imageUrl: userSignedInEntity.imageUrl,
           name: userSignedInEntity.name,
         );
 
-        final userSecureLocalStorage = UserSecureLocalStorageModel(
+        final userSecureLocalStorage = UserSecureLocalStorageEntity(
           accessToken: userSignedInEntity.accessToken,
           refreshToken: userSignedInEntity.refreshToken,
         );
@@ -99,13 +99,13 @@ class SignInCubit extends Cubit<SignInStates> {
         }
       },
       (userSignedInEntity) {
-        final userLocalStorage = UserLocalStorageModel(
+        final userLocalStorage = UserLocalStorageEntity(
           uid: userSignedInEntity.uid,
           imageUrl: userSignedInEntity.imageUrl,
           name: userSignedInEntity.name,
         );
 
-        final userSecureLocalStorage = UserSecureLocalStorageModel(
+        final userSecureLocalStorage = UserSecureLocalStorageEntity(
           accessToken: userSignedInEntity.accessToken,
           refreshToken: userSignedInEntity.refreshToken,
         );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
 
-class TextInputFieldWidget extends StatefulWidget {
-  const TextInputFieldWidget({
+class TextFormFieldWidget extends StatefulWidget {
+  const TextFormFieldWidget({
     Key? key,
     required this.hint,
     required this.controller,
@@ -20,10 +20,10 @@ class TextInputFieldWidget extends StatefulWidget {
   final Function(String)? validator;
 
   @override
-  State<TextInputFieldWidget> createState() => _TextInputFieldWidgetState();
+  State<TextFormFieldWidget> createState() => _TextFormFieldWidgetState();
 }
 
-class _TextInputFieldWidgetState extends State<TextInputFieldWidget> {
+class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   bool hasText = false;
   bool isPasswordHiden = false;
 
