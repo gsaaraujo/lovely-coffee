@@ -69,4 +69,11 @@ class HeadingStyles {
     fontWeight: FontWeight.bold,
     color: ColorStyles.heading1,
   );
+
+  // customs
+  static const errorMessage = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: ColorStyles.errorMessage,
+  );
 }

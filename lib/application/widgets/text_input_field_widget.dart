@@ -6,16 +6,18 @@ class TextInputFieldWidget extends StatefulWidget {
     Key? key,
     required this.hint,
     required this.controller,
+    this.validator,
     this.textInputType,
     this.maxLength = 50,
     this.isPassword = false,
   }) : super(key: key);
 
-  final TextEditingController controller;
-  final TextInputType? textInputType;
-  final int maxLength;
   final String hint;
+  final int maxLength;
   final bool isPassword;
+  final TextInputType? textInputType;
+  final TextEditingController controller;
+  final Function(String)? validator;
 
   @override
   State<TextInputFieldWidget> createState() => _TextInputFieldWidgetState();
@@ -69,9 +71,14 @@ class _TextInputFieldWidgetState extends State<TextInputFieldWidget> {
         ),
       ),
       validator: (value) {
-        if (value == null || value.isEmpty) {
+        if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+
+        if (widget.validator != null) {
+          return widget.validator!(value);
+        }
+
         return null;
       },
     );

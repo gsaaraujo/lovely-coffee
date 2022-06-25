@@ -10,6 +10,8 @@ class ColorStyles {
   static const highlight = Color(0XFFD17843);
   static const errorMessage = Color(0XFFEB5757);
 
+  static const successSnackBar = Color(0XFF27AE60);
+
   static const titleButton1 = Color(0XFFFFFFFF);
   static const borderButton1 = Color(0XFFD17843);
   static const backgroundButton1 = Color(0XFFD17843);

@@ -11,4 +11,9 @@ class ExceptionMessagesConst {
   static const invalidEmail = 'Invalid email. Please try another one.';
 
   static const incorrectCredentials = 'The email or password is incorrect.';
+
+  static const emailAlreadyTaken =
+      'This email has already been taken. Please try another one.';
+
+  static const weakPassword = 'Password must be at least 8 characters long.';
 }

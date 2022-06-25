@@ -29,8 +29,6 @@ class SignInCubit extends Cubit<SignInStates> {
   void signInWithGoogle() async {
     emit(SignInLoadingState());
 
-    return;
-
     final userSignedInEntity = await _signInWithGoogleUsecase();
 
     userSignedInEntity.fold(
@@ -72,8 +70,6 @@ class SignInCubit extends Cubit<SignInStates> {
 
   void signInWithCredentials(String email, String password) async {
     emit(SignInLoadingState());
-
-    return;
 
     final userSignedInEntity =
         await _signInWithCredentialsUsecase(email, password);

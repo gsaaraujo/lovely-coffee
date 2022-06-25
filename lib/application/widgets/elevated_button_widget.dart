@@ -24,7 +24,7 @@ class ElevatedButtonWidget extends StatelessWidget {
       ),
       child: isLoading
           ? SpinKitThreeBounce(
-              size: 32,
+              size: 28,
               itemBuilder: (BuildContext context, int index) {
                 return DecoratedBox(
                   decoration: BoxDecoration(

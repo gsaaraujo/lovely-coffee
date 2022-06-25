@@ -5,6 +5,11 @@ import 'package:lovely_coffee/application/styles/heading_styles.dart';
 ThemeData themeStyles() {
   return ThemeData(
     scaffoldBackgroundColor: const Color(0XFFFFFFFF),
+    appBarTheme: const AppBarTheme(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(color: Color(0XFF424242)),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       prefixIconColor: ColorStyles.textFieldIcon,
       suffixIconColor: ColorStyles.textFieldIcon,
