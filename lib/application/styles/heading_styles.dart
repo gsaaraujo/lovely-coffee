@@ -63,4 +63,10 @@ class HeadingStyles {
     fontWeight: FontWeight.bold,
     color: ColorStyles.heading1,
   );
+
+  static const heading32Bold = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: ColorStyles.heading1,
+  );
 }

@@ -11,6 +11,7 @@ class SplashCubit extends Cubit<SplashStates> {
     emit(SplashLoadingState());
 
     final bool hasUser = await _usecase();
+    await Future.delayed(const Duration(seconds: 2));
 
     if (hasUser) {
       emit(SplashRedirectToHomeState());

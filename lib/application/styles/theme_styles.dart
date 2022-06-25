@@ -6,37 +6,41 @@ ThemeData themeStyles() {
   return ThemeData(
     scaffoldBackgroundColor: const Color(0XFFFFFFFF),
     inputDecorationTheme: InputDecorationTheme(
-      hintStyle: HeadingStyles.heading14Normal,
-      errorStyle: HeadingStyles.heading14Bold,
       prefixIconColor: ColorStyles.textFieldIcon,
       suffixIconColor: ColorStyles.textFieldIcon,
-      constraints: const BoxConstraints(maxHeight: 48),
-      border: OutlineInputBorder(
+      errorStyle: HeadingStyles.heading14Bold.copyWith(
+        color: ColorStyles.errorMessage,
+      ),
+      hintStyle: HeadingStyles.heading14Normal.copyWith(
+        color: ColorStyles.textFieldHint,
+      ),
+      enabledBorder: OutlineInputBorder(
         borderSide: const BorderSide(
-          width: 2.0,
+          width: 1.5,
           color: ColorStyles.textFieldNormalBorder,
         ),
         borderRadius: BorderRadius.circular(10.0),
       ),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: ColorStyles.textFieldNormalBorder,
-        ),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 1.5,
           color: ColorStyles.textFieldFocusBorder,
         ),
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      errorBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
+      errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 1.5,
           color: ColorStyles.textFieldErrorBorder,
         ),
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      focusedErrorBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 1.5,
           color: ColorStyles.textFieldFocusBorder,
         ),
+        borderRadius: BorderRadius.circular(10.0),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -46,7 +50,7 @@ ThemeData themeStyles() {
         textStyle: HeadingStyles.heading16Bold,
         primary: ColorStyles.backgroundButton1,
         onSurface: ColorStyles.backgroundButton1,
-        fixedSize: const Size(double.infinity, 48.0),
+        minimumSize: const Size(0, 48.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

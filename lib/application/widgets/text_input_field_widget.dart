@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lovely_coffee/application/styles/heading_styles.dart';
 
 class TextInputFieldWidget extends StatefulWidget {
   const TextInputFieldWidget({
@@ -21,15 +22,17 @@ class TextInputFieldWidget extends StatefulWidget {
 }
 
 class _TextInputFieldWidgetState extends State<TextInputFieldWidget> {
-  bool isPasswordHiden = true;
   bool hasText = false;
+  bool isPasswordHiden = false;
 
   @override
   void initState() {
-    isPasswordHiden = !(widget.isPassword);
+    isPasswordHiden = widget.isPassword;
 
     widget.controller.addListener(() {
-      widget.controller.text.isEmpty ? hasText = false : hasText = true;
+      setState(() {
+        widget.controller.text.isEmpty ? hasText = false : hasText = true;
+      });
     });
 
     super.initState();
@@ -39,9 +42,12 @@ class _TextInputFieldWidgetState extends State<TextInputFieldWidget> {
   Widget build(BuildContext context) {
     return TextFormField(
       maxLength: widget.maxLength,
+      obscureText: isPasswordHiden,
       controller: widget.controller,
       keyboardType: widget.textInputType,
+      style: HeadingStyles.heading14Normal,
       decoration: InputDecoration(
+        counterText: '',
         hintText: widget.hint,
         suffixIcon: IconButton(
           onPressed: () {
@@ -56,10 +62,18 @@ class _TextInputFieldWidgetState extends State<TextInputFieldWidget> {
                 ? isPasswordHiden
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined
-                : Icons.highlight_remove_rounded,
+                : hasText
+                    ? Icons.highlight_remove_rounded
+                    : null,
           ),
         ),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field is required';
+        }
+        return null;
+      },
     );
   }
 }
