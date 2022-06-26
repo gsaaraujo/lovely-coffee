@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class ProductEntity extends Equatable {
@@ -9,6 +8,7 @@ class ProductEntity extends Equatable {
     required this.additionalInfo,
     required this.description,
     required this.price,
+    required this.isFavorite,
   });
 
   final String id;
@@ -17,6 +17,7 @@ class ProductEntity extends Equatable {
   final String additionalInfo;
   final String description;
   final double price;
+  final bool isFavorite;
 
   @override
   List<Object?> get props => [id];

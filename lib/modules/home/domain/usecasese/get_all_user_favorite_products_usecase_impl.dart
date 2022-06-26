@@ -4,8 +4,8 @@ import 'package:lovely_coffee/modules/home/domain/entities/favorite_product_enti
 import 'package:lovely_coffee/modules/home/domain/repositories/favorite_products_repository.dart';
 
 abstract class GetAllUserFavoriteProductsUsecase {
-  Future<Either<BaseException, List<FavoriteProductEntity>>>
-      getAllUserFavoriteProductsUsecase(String userId);
+  Future<Either<BaseException, List<FavoriteProductEntity>>> call(
+      String userId);
 }
 
 class GetAllUserFavoriteProductsUsecaseImpl
@@ -15,8 +15,8 @@ class GetAllUserFavoriteProductsUsecaseImpl
   final FavoriteProductsRepository _repository;
 
   @override
-  Future<Either<BaseException, List<FavoriteProductEntity>>>
-      getAllUserFavoriteProductsUsecase(String userId) {
+  Future<Either<BaseException, List<FavoriteProductEntity>>> call(
+      String userId) {
     return _repository.findAllFavoriteProductsByUserId(userId);
   }
 }

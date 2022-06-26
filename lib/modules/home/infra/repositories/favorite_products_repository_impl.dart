@@ -46,7 +46,13 @@ class FavoriteProductsRepositoryImpl implements FavoriteProductsRepository {
           await _datasource.findAllFavoriteProductsByUserId(userId);
 
       final favoriteProductsEntityList = favoriteProductsModelList
-          .map((favoriteProductsEntity) => favoriteProductsEntity.toEntity())
+          .map(
+            (favoriteProductsEntity) => FavoriteProductEntity(
+              id: favoriteProductsEntity.id,
+              userId: favoriteProductsEntity.userId,
+              productId: favoriteProductsEntity.productId,
+            ),
+          )
           .toList();
 
       return Right(favoriteProductsEntityList);

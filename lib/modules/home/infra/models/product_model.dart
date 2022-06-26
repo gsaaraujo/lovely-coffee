@@ -1,14 +1,22 @@
-import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 
-class ProductModel extends ProductEntity {
+class ProductModel extends Equatable {
   const ProductModel({
-    required super.id,
-    required super.imageUrl,
-    required super.name,
-    required super.additionalInfo,
-    required super.description,
-    required super.price,
+    required this.id,
+    required this.imageUrl,
+    required this.name,
+    required this.additionalInfo,
+    required this.description,
+    required this.price,
   });
+
+  final String id;
+  final String imageUrl;
+  final String name;
+  final String additionalInfo;
+  final String description;
+  final double price;
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
@@ -21,14 +29,24 @@ class ProductModel extends ProductEntity {
     );
   }
 
-  ProductEntity toEntity() {
-    return ProductEntity(
-      id: id,
-      imageUrl: imageUrl,
-      name: name,
-      additionalInfo: additionalInfo,
-      description: description,
-      price: price,
+  ProductModel copyWith({
+    String? id,
+    String? imageUrl,
+    String? name,
+    String? additionalInfo,
+    String? description,
+    double? price,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      imageUrl: imageUrl ?? this.imageUrl,
+      name: name ?? this.name,
+      additionalInfo: additionalInfo ?? this.additionalInfo,
+      description: description ?? this.description,
+      price: price ?? this.price,
     );
   }
+
+  @override
+  List<Object?> get props => [id];
 }

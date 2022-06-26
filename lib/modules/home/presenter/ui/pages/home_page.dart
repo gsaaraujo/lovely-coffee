@@ -26,9 +26,15 @@ class _HomePageState extends State<HomePage> {
   late UserLocalStorageEntity _userLocalStorageEntity;
 
   @override
-  void initState() async {
+  void initState() {
     homeCubit.fetchInitialData();
-    _userLocalStorageEntity = await homeCubit.getUserLocalStorage();
+    homeCubit.getUserLocalStorage().then(
+      (value) {
+        setState(() {
+          _userLocalStorageEntity = value;
+        });
+      },
+    );
 
     super.initState();
   }
@@ -223,35 +229,43 @@ class _SignOutModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          'Would you like to sign out ?',
-          style: HeadingStyles.heading18Bold,
-        ),
-        ElevatedButtonWidget(
-          title: 'Continue in the app',
-          onPressed: () => Navigator.pop(context),
-        ),
-        ElevatedButton(
-          onPressed: onSignOut,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            side: const BorderSide(
-              width: 1.5,
-              color: ColorStyles.highlight,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 20,
+        children: [
+          const SizedBox(height: 65.0, width: double.infinity),
+          const Text(
+            'Would you like to sign out ?',
+            style: HeadingStyles.heading18Bold,
+          ),
+          const SizedBox(height: 38.0, width: double.infinity),
+          ElevatedButtonWidget(
+            title: 'Continue in the app',
+            onPressed: () => Navigator.pop(context),
+          ),
+          const SizedBox(height: 15.0, width: double.infinity),
+          ElevatedButton(
+            onPressed: onSignOut,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              minimumSize: const Size(double.infinity, 48.0),
+              side: const BorderSide(
+                width: 1.5,
+                color: ColorStyles.highlight,
+              ),
+            ),
+            child: Text(
+              'Sign out',
+              style: HeadingStyles.heading18Bold.copyWith(
+                color: ColorStyles.highlight,
+              ),
             ),
           ),
-          child: Text(
-            'Sign out',
-            style: HeadingStyles.heading18Bold.copyWith(
-              color: ColorStyles.highlight,
-            ),
-          ),
-        ),
-      ],
+          const SizedBox(height: 62.0, width: double.infinity),
+        ],
+      ),
     );
   }
 }

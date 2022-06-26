@@ -52,6 +52,7 @@ class ProductWidget extends StatelessWidget {
                       height: 50,
                       width: 50,
                       child: LikeButton(
+                          isLiked: product.isFavorite,
                           circleColor: const CircleColor(
                             start: Color(0XFFEB5757),
                             end: Color(0XFFEB5757),

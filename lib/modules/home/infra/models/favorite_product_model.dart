@@ -1,22 +1,37 @@
-import 'package:lovely_coffee/modules/home/domain/entities/favorite_product_entity.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 
-class FavoriteProductModel extends FavoriteProductEntity {
+class FavoriteProductModel extends Equatable {
   const FavoriteProductModel({
-    required super.userId,
-    required super.productId,
+    required this.id,
+    required this.userId,
+    required this.productId,
   });
+
+  final String id;
+  final String userId;
+  final String productId;
 
   factory FavoriteProductModel.fromMap(Map<String, dynamic> map) {
     return FavoriteProductModel(
+      id: map['id'] ?? '',
       userId: map['userId'] ?? '',
       productId: map['productId'] ?? '',
     );
   }
 
-  FavoriteProductEntity toEntity() {
-    return FavoriteProductEntity(
-      userId: userId,
-      productId: productId,
+  FavoriteProductModel copyWith({
+    String? id,
+    String? userId,
+    String? productId,
+  }) {
+    return FavoriteProductModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      productId: productId ?? this.productId,
     );
   }
+
+  @override
+  List<Object?> get props => [id];
 }

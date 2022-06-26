@@ -13,7 +13,7 @@ class HomeModule extends Module {
   @override
   List<Bind<Object>> get binds => [
         // cubits
-        Bind.lazySingleton((i) => HomeCubit(i(), i(), i(), i(), i())),
+        Bind.lazySingleton((i) => HomeCubit(i(), i(), i(), i())),
 
         // usecases
         Bind.factory((i) => GetAllProductsUsecaseImpl(i())),
@@ -21,7 +21,7 @@ class HomeModule extends Module {
         Bind.factory((i) => AddOrRemoveProductToFavoritesUsecaseImpl(i())),
 
         // repositories
-        Bind.factory((i) => ProductsRepositoryImpl(i(), i())),
+        Bind.factory((i) => ProductsRepositoryImpl(i(), i(), i(), i())),
         Bind.factory((i) => FavoriteProductsRepositoryImpl(i(), i())),
 
         // datasources
@@ -32,6 +32,5 @@ class HomeModule extends Module {
   @override
   List<ModularRoute> get routes => [
         ChildRoute('/', child: (context, args) => const HomePage()),
-        ModuleRoute('/sign-in', module: HomeModule()),
       ];
 }

@@ -21,6 +21,7 @@ void main() {
     additionalInfo: 'with oat milk',
     description: 'very tasty',
     price: 25.50,
+    isFavorite: false,
   );
 
   setUp(() {

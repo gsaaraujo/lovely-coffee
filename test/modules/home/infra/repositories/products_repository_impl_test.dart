@@ -37,6 +37,7 @@ void main() {
     additionalInfo: 'with oat milk',
     description: 'very tasty',
     price: 25.50,
+    isFavorite: false,
   );
 
   const fakeProductModel = ProductModel(
@@ -46,6 +47,7 @@ void main() {
     additionalInfo: 'with oat milk',
     description: 'very tasty',
     price: 25.50,
+    isFavorite: false,
   );
 
   test('findAllProducts should return a list of ProductEntity', () async {

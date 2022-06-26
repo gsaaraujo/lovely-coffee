@@ -29,6 +29,7 @@ void main() {
     additionalInfo: 'milk',
     description: 'none',
     price: 12.20,
+    isFavorite: false,
   );
 
   setUp(() {

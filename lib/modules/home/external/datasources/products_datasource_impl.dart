@@ -19,9 +19,13 @@ class ProductsDatasourceImpl implements ProductsDatasource {
 
       final documentGet = await document.get();
 
-      final productList = documentGet.docs
-          .map((doc) => ProductModel.fromMap(doc.data()))
-          .toList();
+      final productList = documentGet.docs.map((doc) {
+        ProductModel productModel = ProductModel.fromMap(doc.data());
+
+        productModel = productModel.copyWith(id: doc.id);
+
+        return productModel;
+      }).toList();
 
       return productList;
     } catch (exception, stackTrace) {
