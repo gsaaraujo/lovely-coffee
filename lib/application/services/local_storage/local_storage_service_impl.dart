@@ -20,9 +20,11 @@ class LocalStorageServiceImpl implements LocalStorageService {
   @override
   Future<UserLocalStorageEntity> getUser() async {
     final box = await _hive.openBox('USER_BOX');
-    final Map<String, dynamic> userMap = box.get('USER');
+    final userMap = box.get('USER');
 
-    return UserLocalStorageEntity.fromMap(userMap);
+    return UserLocalStorageEntity.fromMap(
+      Map<String, dynamic>.from(userMap),
+    );
   }
 
   @override

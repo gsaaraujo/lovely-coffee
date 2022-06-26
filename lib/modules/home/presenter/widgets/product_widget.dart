@@ -3,9 +3,12 @@ import 'package:like_button/like_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lovely_coffee/application/styles/color_styles.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
+import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
 
-class ProductsWidget extends StatelessWidget {
-  const ProductsWidget({Key? key}) : super(key: key);
+class ProductWidget extends StatelessWidget {
+  const ProductWidget({Key? key, required this.product}) : super(key: key);
+
+  final ProductEntity product;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class ProductsWidget extends StatelessWidget {
               child: Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: "http://via.placeholffder.com/200x150",
+                    imageUrl: product.imageUrl,
                     imageBuilder: (context, imageProvider) => Container(
                       width: constraints.minWidth,
                       height: constraints.minHeight * 0.59,
@@ -72,10 +75,10 @@ class ProductsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10.0),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Text(
-                'Cappuccino ',
+                product.name,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: HeadingStyles.heading18Bold,
@@ -85,7 +88,7 @@ class ProductsWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Text(
-                'Cappuccino ',
+                product.additionalInfo,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: HeadingStyles.heading16Medium.copyWith(
@@ -103,9 +106,9 @@ class ProductsWidget extends StatelessWidget {
                   style: HeadingStyles.heading20Bold.copyWith(
                     color: ColorStyles.highlight,
                   ),
-                  children: const [
+                  children: [
                     TextSpan(
-                      text: '7.50',
+                      text: '${product.price}',
                       style: HeadingStyles.heading20Bold,
                     ),
                   ],

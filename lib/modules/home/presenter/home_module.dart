@@ -13,7 +13,7 @@ class HomeModule extends Module {
   @override
   List<Bind<Object>> get binds => [
         // cubits
-        Bind.lazySingleton((i) => HomeCubit(i(), i(), i(), i())),
+        Bind.lazySingleton((i) => HomeCubit(i(), i(), i(), i(), i())),
 
         // usecases
         Bind.factory((i) => GetAllProductsUsecaseImpl(i())),
@@ -32,5 +32,6 @@ class HomeModule extends Module {
   @override
   List<ModularRoute> get routes => [
         ChildRoute('/', child: (context, args) => const HomePage()),
+        ModuleRoute('/sign-in', module: HomeModule()),
       ];
 }

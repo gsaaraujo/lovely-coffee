@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lovely_coffee/application/styles/color_styles.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
+import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/application/widgets/text_field_widget.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_cubit.dart';
-import 'package:lovely_coffee/modules/home/presenter/widgets/products_widget.dart';
+import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
+import 'package:lovely_coffee/modules/home/presenter/cubits/home_states.dart';
+import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
+import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
+import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
+import 'package:lovely_coffee/modules/home/presenter/widgets/product_widget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    final _homeCubit = Modular.get<HomeCubit>();
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  final homeCubit = Modular.get<HomeCubit>();
+  late UserLocalStorageEntity _userLocalStorageEntity;
+
+  @override
+  void initState() async {
+    homeCubit.fetchInitialData();
+    _userLocalStorageEntity = await homeCubit.getUserLocalStorage();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -41,21 +61,33 @@ class HomePage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const _BuildWelcomeText(name: 'Gabriel'),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "http://via.placeholder.com/350x150",
-                                  width: 48.0,
-                                  height: 48.0,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(
-                                    color: ColorStyles.highlight,
+                              _BuildWelcomeText(
+                                  name: _userLocalStorageEntity.name),
+                              GestureDetector(
+                                onTap: () => showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => _SignOutModal(
+                                    onSignOut: () {
+                                      homeCubit.signOut();
+                                      Modular.to.navigate('/sign-in');
+                                    },
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset('assets/images/caffee.png'),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        _userLocalStorageEntity.imageUrl ?? '',
+                                    width: 48.0,
+                                    height: 48.0,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(
+                                      color: ColorStyles.highlight,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Image.asset('assets/images/caffee.png'),
+                                  ),
                                 ),
                               ),
                             ],
@@ -79,18 +111,50 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 25.0),
               Expanded(
-                child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.59,
-                  ),
-                  // itemCount: myProducts.length,
-                  itemBuilder: (BuildContext context, index) {
-                    return const ProductsWidget();
+                child: BlocBuilder<HomeCubit, HomeStates>(
+                  bloc: homeCubit,
+                  builder: (context, state) {
+                    if (state is HomeFailedState) {
+                      if (state.exception is NoDeviceConnectionException) {
+                        return const Center(
+                          child: Text(
+                            ExceptionMessagesConst.noConnection,
+                            style: HeadingStyles.errorMessage,
+                          ),
+                        );
+                      }
+
+                      if (state.exception is UnknownException) {
+                        return const Center(
+                          child: Text(
+                            ExceptionMessagesConst.unknown,
+                            style: HeadingStyles.errorMessage,
+                          ),
+                        );
+                      }
+                    }
+
+                    if (state is HomeSucceedState) {
+                      return GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 20,
+                          crossAxisSpacing: 20,
+                          childAspectRatio: 0.59,
+                        ),
+                        itemCount: state.productList.length,
+                        itemBuilder: (BuildContext context, index) {
+                          return ProductWidget(
+                            product: state.productList[index],
+                          );
+                        },
+                      );
+                    }
+
+                    return const SizedBox();
                   },
                 ),
               )
@@ -147,6 +211,46 @@ class _BuildWelcomeText extends StatelessWidget {
             ],
           ),
         )
+      ],
+    );
+  }
+}
+
+class _SignOutModal extends StatelessWidget {
+  const _SignOutModal({Key? key, required this.onSignOut}) : super(key: key);
+
+  final VoidCallback onSignOut;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text(
+          'Would you like to sign out ?',
+          style: HeadingStyles.heading18Bold,
+        ),
+        ElevatedButtonWidget(
+          title: 'Continue in the app',
+          onPressed: () => Navigator.pop(context),
+        ),
+        ElevatedButton(
+          onPressed: onSignOut,
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            side: const BorderSide(
+              width: 1.5,
+              color: ColorStyles.highlight,
+            ),
+          ),
+          child: Text(
+            'Sign out',
+            style: HeadingStyles.heading18Bold.copyWith(
+              color: ColorStyles.highlight,
+            ),
+          ),
+        ),
       ],
     );
   }

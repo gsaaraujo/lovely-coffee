@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:lovely_coffee/application/services/secure_local_storage/secure_local_storage_service.dart';
 import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_states.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
@@ -11,6 +12,7 @@ import 'package:lovely_coffee/modules/home/domain/usecasese/add_or_remove_produc
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit(
     this._localStorageService,
+    this._secureLocalStorageService,
     this._getAllProductsUsecase,
     this._getAllUserFavoriteProductsUsecase,
     this._addOrRemoveProductToFavoritesUsecase,
@@ -23,6 +25,7 @@ class HomeCubit extends Cubit<HomeStates> {
       _addOrRemoveProductToFavoritesUsecase;
 
   final LocalStorageService _localStorageService;
+  final SecureLocalStorageService _secureLocalStorageService;
 
   void fetchInitialData() async {
     emit(HomeLoadingState());
@@ -43,5 +46,14 @@ class HomeCubit extends Cubit<HomeStates> {
     }, (productList) {
       emit(HomeSucceedState(userSigned, productList));
     });
+  }
+
+  Future<UserLocalStorageEntity> getUserLocalStorage() {
+    return _localStorageService.getUser();
+  }
+
+  void signOut() {
+    _localStorageService.deleteUser();
+    _secureLocalStorageService.deleteTokens();
   }
 }

@@ -17,7 +17,7 @@ class ProductModel extends ProductEntity {
       name: map['name'] ?? '',
       additionalInfo: map['additionalInfo'] ?? '',
       description: map['description'] ?? '',
-      price: map['price'] ?? 0.0,
+      price: map['price'] != null ? map['price'] / 100 : 0.0,
     );
   }
 
