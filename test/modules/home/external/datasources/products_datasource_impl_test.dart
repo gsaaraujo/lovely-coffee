@@ -28,8 +28,7 @@ void main() {
     name: 'cappuccino',
     additionalInfo: 'milk',
     description: 'none',
-    price: 12.20,
-    isFavorite: false,
+    price: 1220,
   );
 
   setUp(() {

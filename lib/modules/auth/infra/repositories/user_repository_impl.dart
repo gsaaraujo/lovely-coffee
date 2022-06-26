@@ -23,10 +23,18 @@ class UserRepositoryImpl implements UserRepository {
         return Left(NoDeviceConnectionException());
       }
 
-      final UserSignedInModel userSignedIn =
+      final UserSignedInModel userSignedInModel =
           await _userDatasource.signInWithGoogle();
 
-      return Right(userSignedIn.toEntity());
+      final userSignedInEntity = UserSignedInEntity(
+        uid: userSignedInModel.uid,
+        imageUrl: userSignedInModel.imageUrl,
+        name: userSignedInModel.name,
+        accessToken: userSignedInModel.accessToken,
+        refreshToken: userSignedInModel.refreshToken,
+      );
+
+      return Right(userSignedInEntity);
     } on BaseException catch (exception) {
       return Left(exception);
     }
@@ -43,10 +51,18 @@ class UserRepositoryImpl implements UserRepository {
         return Left(NoDeviceConnectionException());
       }
 
-      final UserSignedInModel userSignedIn =
+      final UserSignedInModel userSignedInModel =
           await _userDatasource.signInWithCredentials(email, password);
 
-      return Right(userSignedIn.toEntity());
+      final userSignedInEntity = UserSignedInEntity(
+        uid: userSignedInModel.uid,
+        imageUrl: userSignedInModel.imageUrl,
+        name: userSignedInModel.name,
+        accessToken: userSignedInModel.accessToken,
+        refreshToken: userSignedInModel.refreshToken,
+      );
+
+      return Right(userSignedInEntity);
     } on BaseException catch (exception) {
       return Left(exception);
     }

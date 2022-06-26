@@ -56,7 +56,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
             name: productModel.name,
             additionalInfo: productModel.additionalInfo,
             description: productModel.description,
-            price: productModel.price,
+            price: productModel.price / 100,
             isFavorite: favoriteProductIDList.contains(productModel.id),
           );
         },

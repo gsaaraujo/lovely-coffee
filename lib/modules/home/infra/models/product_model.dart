@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class ProductModel extends Equatable {
@@ -16,7 +15,7 @@ class ProductModel extends Equatable {
   final String name;
   final String additionalInfo;
   final String description;
-  final double price;
+  final int price;
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
@@ -25,7 +24,7 @@ class ProductModel extends Equatable {
       name: map['name'] ?? '',
       additionalInfo: map['additionalInfo'] ?? '',
       description: map['description'] ?? '',
-      price: map['price'] != null ? map['price'] / 100 : 0.0,
+      price: map['price'] ?? 0,
     );
   }
 
@@ -35,7 +34,7 @@ class ProductModel extends Equatable {
     String? name,
     String? additionalInfo,
     String? description,
-    double? price,
+    int? price,
   }) {
     return ProductModel(
       id: id ?? this.id,

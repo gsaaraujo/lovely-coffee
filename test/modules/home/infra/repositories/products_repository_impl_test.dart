@@ -8,25 +8,38 @@ import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dar
 import 'package:lovely_coffee/modules/home/infra/datasources/products_datasource.dart';
 import 'package:lovely_coffee/modules/home/domain/repositories/products_repository.dart';
 import 'package:lovely_coffee/modules/home/infra/repositories/products_repository_impl.dart';
+import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
+import 'package:lovely_coffee/modules/home/infra/datasources/favorite_products_datasource.dart';
 import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
 
 class MockProductsDatasource extends Mock implements ProductsDatasource {}
 
+class MockFavoriteProductsDatasource extends Mock
+    implements FavoriteProductsDatasource {}
+
 class MockDeviceConnectivityService extends Mock
     implements DeviceConnectivityService {}
 
+class MockLocalStorageService extends Mock implements LocalStorageService {}
+
 void main() {
-  late ProductsDatasource mockDatasource;
+  late ProductsDatasource mockProductsDatasource;
+  late FavoriteProductsDatasource mockFavoriteProductsDatasource;
   late ProductsRepository repository;
+  late LocalStorageService mockLocalStorageService;
   late DeviceConnectivityService mockDeviceConnectivityService;
 
   setUp(() {
-    mockDatasource = MockProductsDatasource();
+    mockProductsDatasource = MockProductsDatasource();
+    mockFavoriteProductsDatasource = MockFavoriteProductsDatasource();
     mockDeviceConnectivityService = MockDeviceConnectivityService();
+    mockLocalStorageService = MockLocalStorageService();
 
     repository = ProductsRepositoryImpl(
-      mockDatasource,
+      mockProductsDatasource,
+      mockFavoriteProductsDatasource,
       mockDeviceConnectivityService,
+      mockLocalStorageService,
     );
   });
 
@@ -46,21 +59,20 @@ void main() {
     name: 'cappuccino',
     additionalInfo: 'with oat milk',
     description: 'very tasty',
-    price: 25.50,
-    isFavorite: false,
+    price: 2550,
   );
 
   test('findAllProducts should return a list of ProductEntity', () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
 
-    when(() => mockDatasource.findAllProducts())
+    when(() => mockProductsDatasource.findAllProducts())
         .thenAnswer((_) async => [fakeProductModel]);
 
     final productList = await repository.findAllProducts();
 
     verify(() => mockDeviceConnectivityService.hasDeviceConnection());
-    verify(() => mockDatasource.findAllProducts());
+    verify(() => mockProductsDatasource.findAllProducts());
     expect(productList.fold(id, id), [fakeProductEntity]);
   });
 
@@ -78,12 +90,13 @@ void main() {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
 
-    when(() => mockDatasource.findAllProducts()).thenThrow(UnknownException());
+    when(() => mockProductsDatasource.findAllProducts())
+        .thenThrow(UnknownException());
 
     final productList = await repository.findAllProducts();
 
     verify(() => mockDeviceConnectivityService.hasDeviceConnection());
-    verify(() => mockDatasource.findAllProducts());
+    verify(() => mockProductsDatasource.findAllProducts());
     expect(productList.fold(id, id), UnknownException());
   });
 }

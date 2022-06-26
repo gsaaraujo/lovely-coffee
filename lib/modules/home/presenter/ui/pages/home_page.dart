@@ -7,12 +7,12 @@ import 'package:lovely_coffee/application/styles/heading_styles.dart';
 import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/application/widgets/text_field_widget.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_cubit.dart';
-import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_states.dart';
+import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
+import 'package:lovely_coffee/modules/home/presenter/widgets/product_widget.dart';
 import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
-import 'package:lovely_coffee/modules/home/presenter/widgets/product_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

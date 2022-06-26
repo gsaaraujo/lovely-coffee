@@ -14,7 +14,7 @@ void main() {
   const userId = '777';
 
   const Map<String, dynamic> data = {
-    "producId": productId,
+    "productId": productId,
     "userId": userId,
   };
 
@@ -31,7 +31,7 @@ void main() {
     final instance = FakeFirebaseFirestore();
 
     await instance.collection('favorite-products').add({
-      "producId": '000',
+      "productId": '000',
       "userId": '999',
     });
 

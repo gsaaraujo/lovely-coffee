@@ -1,14 +1,21 @@
 import 'dart:convert';
-import 'package:lovely_coffee/modules/auth/domain/entities/user_signed_in_entity.dart';
 
-class UserSignedInModel extends UserSignedInEntity {
+import 'package:equatable/equatable.dart';
+
+class UserSignedInModel extends Equatable {
   const UserSignedInModel({
-    required super.uid,
-    required super.imageUrl,
-    required super.name,
-    required super.accessToken,
-    required super.refreshToken,
+    required this.uid,
+    this.imageUrl,
+    required this.name,
+    required this.accessToken,
+    required this.refreshToken,
   });
+
+  final String uid;
+  final String? imageUrl;
+  final String name;
+  final String accessToken;
+  final String refreshToken;
 
   factory UserSignedInModel.fromMap(Map map) {
     return UserSignedInModel(
@@ -30,28 +37,11 @@ class UserSignedInModel extends UserSignedInEntity {
     };
   }
 
-  factory UserSignedInModel.fromEntity(UserSignedInEntity userSignedInEntity) {
-    return UserSignedInModel(
-      uid: userSignedInEntity.uid,
-      imageUrl: userSignedInEntity.imageUrl,
-      name: userSignedInEntity.name,
-      accessToken: userSignedInEntity.accessToken,
-      refreshToken: userSignedInEntity.refreshToken,
-    );
-  }
-
-  UserSignedInEntity toEntity() {
-    return UserSignedInEntity(
-      uid: uid,
-      imageUrl: imageUrl,
-      name: name,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    );
-  }
-
   String toJson() => json.encode(toMap());
 
   factory UserSignedInModel.fromJson(String source) =>
       UserSignedInModel.fromMap(json.decode(source));
+
+  @override
+  List<Object?> get props => [uid];
 }

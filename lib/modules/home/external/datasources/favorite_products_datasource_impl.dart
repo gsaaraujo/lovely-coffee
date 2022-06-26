@@ -13,14 +13,14 @@ class FavoriteProductsDatasourceImpl implements FavoriteProductsDatasource {
       String productId, String userId) async {
     try {
       final Map<String, dynamic> data = {
-        "producId": productId,
         "userId": userId,
+        "productId": productId,
       };
 
       final documents = await _firestore
           .collection('favorite-products')
           .where('userId', isEqualTo: userId)
-          .where('producId', isEqualTo: productId)
+          .where('productId', isEqualTo: productId)
           .get();
 
       if (documents.docs.isEmpty) {
@@ -29,6 +29,7 @@ class FavoriteProductsDatasourceImpl implements FavoriteProductsDatasource {
       }
 
       await documents.docs.first.reference.delete();
+      return;
     } catch (exception, stackTrace) {
       throw UnknownException(stackTrace: stackTrace);
     }

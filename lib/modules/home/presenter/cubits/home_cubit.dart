@@ -45,9 +45,19 @@ class HomeCubit extends Cubit<HomeStates> {
     });
   }
 
-  // void addProductToFavorites() async {
-  //   emit(HomeLoadingState());
-  // }
+  Future<bool> addOrRemoveProductToFavorites(String productId) async {
+    final userSigned = await _localStorageService.getUser();
+    final productList = await _addOrRemoveProductToFavoritesUsecase(
+      productId,
+      userSigned.uid,
+    );
+
+    return productList.fold((exception) {
+      return false;
+    }, (isSuccess) {
+      return true;
+    });
+  }
 
   Future<UserLocalStorageEntity> getUserLocalStorage() {
     return _localStorageService.getUser();

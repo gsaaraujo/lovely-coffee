@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lovely_coffee/application/styles/color_styles.dart';
 import 'package:lovely_coffee/application/styles/heading_styles.dart';
+import 'package:lovely_coffee/modules/home/presenter/cubits/home_cubit.dart';
 import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
 
-class ProductWidget extends StatelessWidget {
+class ProductWidget extends StatefulWidget {
   const ProductWidget({Key? key, required this.product}) : super(key: key);
 
   final ProductEntity product;
+
+  @override
+  State<ProductWidget> createState() => _ProductWidgetState();
+}
+
+class _ProductWidgetState extends State<ProductWidget> {
+  bool isFavorite = false;
+  final homeCubit = Modular.get<HomeCubit>();
+
+  @override
+  void initState() {
+    isFavorite = widget.product.isFavorite;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +38,7 @@ class ProductWidget extends StatelessWidget {
               child: Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: product.imageUrl,
+                    imageUrl: widget.product.imageUrl,
                     imageBuilder: (context, imageProvider) => Container(
                       width: constraints.minWidth,
                       height: constraints.minHeight * 0.59,
@@ -52,7 +68,18 @@ class ProductWidget extends StatelessWidget {
                       height: 50,
                       width: 50,
                       child: LikeButton(
-                          isLiked: product.isFavorite,
+                          onTap: (isFavorite) async {
+                            final bool isSuccess =
+                                await homeCubit.addOrRemoveProductToFavorites(
+                              widget.product.id,
+                            );
+
+                            if (isSuccess) {
+                              return !isFavorite;
+                            }
+
+                            return isFavorite;
+                          },
                           circleColor: const CircleColor(
                             start: Color(0XFFEB5757),
                             end: Color(0XFFEB5757),
@@ -61,10 +88,10 @@ class ProductWidget extends StatelessWidget {
                             dotPrimaryColor: Color(0XFFEB5757),
                             dotSecondaryColor: Color(0XFFEB5757),
                           ),
-                          likeBuilder: (bool isLiked) {
+                          likeBuilder: (isFavorite) {
                             return Icon(
                               Icons.favorite,
-                              color: isLiked
+                              color: isFavorite
                                   ? const Color(0XFFEB5757)
                                   : Colors.grey,
                               size: 30,
@@ -79,7 +106,7 @@ class ProductWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Text(
-                product.name,
+                widget.product.name,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: HeadingStyles.heading18Bold,
@@ -89,7 +116,7 @@ class ProductWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Text(
-                product.additionalInfo,
+                widget.product.additionalInfo,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: HeadingStyles.heading16Medium.copyWith(
@@ -109,7 +136,7 @@ class ProductWidget extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: '${product.price}',
+                      text: '${widget.product.price}',
                       style: HeadingStyles.heading20Bold,
                     ),
                   ],
