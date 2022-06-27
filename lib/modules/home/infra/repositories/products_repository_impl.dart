@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:lovely_coffee/core/exceptions/base_exception.dart';
+import 'package:lovely_coffee/core/exceptions/local_storage_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/models/product_model.dart';
 import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
 import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
@@ -37,32 +38,39 @@ class ProductsRepositoryImpl implements ProductsRepository {
         return Left(NoDeviceConnectionException());
       }
 
-      final UserLocalStorageEntity user = await _localStorageService.getUser();
+      final user = await _localStorageService.getUser();
 
-      final List<ProductModel> productModelList =
-          await _productsDatasource.findAllProducts();
+      return user.fold((exception) {
+        return Left(LocalStorageException());
+        //
+      }, (userLocalStorage) async {
+        //
+        final List<ProductModel> productModelList =
+            await _productsDatasource.findAllProducts();
 
-      final List<FavoriteProductModel> favoriteModelList =
-          await _favoritesDatasource.findAllFavoriteProductsByUserId(user.uid);
+        final List<FavoriteProductModel> favoriteModelList =
+            await _favoritesDatasource
+                .findAllFavoriteProductsByUserId(userLocalStorage.uid);
 
-      final List<String> favoriteProductIDList =
-          favoriteModelList.map((favorite) => favorite.productId).toList();
+        final List<String> favoriteProductIDList =
+            favoriteModelList.map((favorite) => favorite.productId).toList();
 
-      final List<ProductEntity> productEntityList = productModelList.map(
-        (productModel) {
-          return ProductEntity(
-            id: productModel.id,
-            imageUrl: productModel.imageUrl,
-            name: productModel.name,
-            additionalInfo: productModel.additionalInfo,
-            description: productModel.description,
-            price: productModel.price / 100,
-            isFavorite: favoriteProductIDList.contains(productModel.id),
-          );
-        },
-      ).toList();
+        final List<ProductEntity> productEntityList = productModelList.map(
+          (productModel) {
+            return ProductEntity(
+              id: productModel.id,
+              imageUrl: productModel.imageUrl,
+              name: productModel.name,
+              additionalInfo: productModel.additionalInfo,
+              description: productModel.description,
+              price: productModel.price / 100,
+              isFavorite: favoriteProductIDList.contains(productModel.id),
+            );
+          },
+        ).toList();
 
-      return Right(productEntityList);
+        return Right(productEntityList);
+      });
     } on BaseException catch (exception) {
       return Left(exception);
     }

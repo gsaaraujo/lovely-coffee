@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
+import 'package:lovely_coffee/core/exceptions/local_storage_exception.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_states.dart';
-import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
 import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 import 'package:lovely_coffee/modules/home/domain/usecasese/get_all_products_usecase_impl.dart';
@@ -28,39 +28,48 @@ class HomeCubit extends Cubit<HomeStates> {
     emit(HomeLoadingState());
 
     final productList = await _getAllProductsUsecase();
-    final userSigned = await _localStorageService.getUser();
+    final userLocalStorage = await _localStorageService.getUser();
 
-    productList.fold((exception) {
-      if (exception is NoDeviceConnectionException) {
-        emit(HomeFailedState(exception: exception));
-        return;
-      }
+    productList.fold(
+      (exception) {
+        if (exception is NoDeviceConnectionException) {
+          emit(HomeFailedState(exception: exception));
+          return;
+        }
 
-      if (exception is UnknownException) {
-        emit(HomeFailedState(exception: exception));
-        return;
-      }
-    }, (productList) {
-      emit(HomeSucceedState(userSigned, productList));
-    });
+        if (exception is UnknownException) {
+          emit(HomeFailedState(exception: exception));
+          return;
+        }
+      },
+      (productList) => userLocalStorage.fold((exception) {
+        if (exception is LocalStorageException) {
+          emit(HomeFailedState(exception: exception));
+          return;
+        }
+      }, (userLocalStorage) {
+        emit(HomeSucceedState(productList, userLocalStorage));
+      }),
+    );
   }
 
   Future<bool> addOrRemoveProductToFavorites(String productId) async {
     final userSigned = await _localStorageService.getUser();
-    final productList = await _addOrRemoveProductToFavoritesUsecase(
-      productId,
-      userSigned.uid,
-    );
 
-    return productList.fold((exception) {
+    return userSigned.fold((exception) {
       return false;
-    }, (isSuccess) {
-      return true;
-    });
-  }
+    }, (userLocalStorageEntity) async {
+      final productList = await _addOrRemoveProductToFavoritesUsecase(
+        productId,
+        userLocalStorageEntity.uid,
+      );
 
-  Future<UserLocalStorageEntity> getUserLocalStorage() {
-    return _localStorageService.getUser();
+      return productList.fold((exception) {
+        return false;
+      }, (isSuccess) {
+        return true;
+      });
+    });
   }
 
   void signOut() {

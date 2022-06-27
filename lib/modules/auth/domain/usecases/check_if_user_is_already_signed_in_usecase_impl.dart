@@ -1,7 +1,9 @@
+import 'package:dartz/dartz.dart';
+import 'package:lovely_coffee/core/exceptions/base_exception.dart';
 import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 
 abstract class CheckIfUserIsAlreadySignedInUsecase {
-  Future<bool> call();
+  Future<Either<BaseException, bool>> call();
 }
 
 class CheckIfUserIsAlreadySignedInUsecaseImpl
@@ -11,7 +13,7 @@ class CheckIfUserIsAlreadySignedInUsecaseImpl
   final LocalStorageService _localStorage;
 
   @override
-  Future<bool> call() async {
+  Future<Either<BaseException, bool>> call() async {
     return await _localStorage.hasUser();
   }
 }

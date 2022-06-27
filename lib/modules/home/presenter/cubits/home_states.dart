@@ -13,10 +13,10 @@ class HomeInitialState extends HomeStates {}
 class HomeLoadingState extends HomeStates {}
 
 class HomeSucceedState extends HomeStates {
-  HomeSucceedState(this.userLocalStorageEntity, this.productList);
+  HomeSucceedState(this.productList, this.userLocalStorage);
 
   final List<ProductEntity> productList;
-  final UserLocalStorageEntity userLocalStorageEntity;
+  final UserLocalStorageEntity userLocalStorage;
 }
 
 class HomeFailedState extends HomeStates {

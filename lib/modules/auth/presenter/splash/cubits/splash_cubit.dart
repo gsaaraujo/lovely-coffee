@@ -10,13 +10,13 @@ class SplashCubit extends Cubit<SplashStates> {
   void redirectUser() async {
     emit(SplashLoadingState());
 
-    final bool hasUser = await _usecase();
+    final hasUser = await _usecase();
     await Future.delayed(const Duration(seconds: 2));
 
-    if (hasUser) {
-      emit(SplashRedirectToHomeState());
-    } else {
+    hasUser.fold((exception) {
       emit(SplashRedirectToSignInState());
-    }
+    }, (r) {
+      emit(SplashRedirectToHomeState());
+    });
   }
 }

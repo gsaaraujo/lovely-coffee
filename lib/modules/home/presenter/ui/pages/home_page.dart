@@ -9,7 +9,6 @@ import 'package:lovely_coffee/application/widgets/text_field_widget.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_cubit.dart';
 import 'package:lovely_coffee/modules/home/presenter/cubits/home_states.dart';
 import 'package:lovely_coffee/application/widgets/elevated_button_widget.dart';
-import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
 import 'package:lovely_coffee/modules/home/presenter/widgets/product_widget.dart';
 import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/application/constants/exception_messages_const.dart';
@@ -23,24 +22,45 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final homeCubit = Modular.get<HomeCubit>();
-  late UserLocalStorageEntity _userLocalStorageEntity;
 
   @override
   void initState() {
     homeCubit.fetchInitialData();
-    homeCubit.getUserLocalStorage().then(
-      (value) {
-        setState(() {
-          _userLocalStorageEntity = value;
-        });
-      },
-    );
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final HomeStates state = homeCubit.state;
+
+    if (state is HomeLoadingState) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (state is HomeFailedState) {
+      if (state.exception is NoDeviceConnectionException) {
+        return const Center(
+          child: Text(
+            ExceptionMessagesConst.noConnection,
+            style: HeadingStyles.errorMessage,
+          ),
+        );
+      }
+
+      if (state.exception is UnknownException) {
+        return const Center(
+          child: Text(
+            ExceptionMessagesConst.unknown,
+            style: HeadingStyles.errorMessage,
+          ),
+        );
+      }
+    }
+
+    state as HomeSucceedState;
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -68,7 +88,8 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               _BuildWelcomeText(
-                                  name: _userLocalStorageEntity.name),
+                                name: state.userLocalStorage.name,
+                              ),
                               GestureDetector(
                                 onTap: () => showModalBottomSheet(
                                   context: context,
@@ -83,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(10.0),
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        _userLocalStorageEntity.imageUrl ?? '',
+                                        state.userLocalStorage.imageUrl ?? '',
                                     width: 48.0,
                                     height: 48.0,
                                     fit: BoxFit.cover,
@@ -117,50 +138,20 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 25.0),
               Expanded(
-                child: BlocBuilder<HomeCubit, HomeStates>(
-                  bloc: homeCubit,
-                  builder: (context, state) {
-                    if (state is HomeFailedState) {
-                      if (state.exception is NoDeviceConnectionException) {
-                        return const Center(
-                          child: Text(
-                            ExceptionMessagesConst.noConnection,
-                            style: HeadingStyles.errorMessage,
-                          ),
-                        );
-                      }
-
-                      if (state.exception is UnknownException) {
-                        return const Center(
-                          child: Text(
-                            ExceptionMessagesConst.unknown,
-                            style: HeadingStyles.errorMessage,
-                          ),
-                        );
-                      }
-                    }
-
-                    if (state is HomeSucceedState) {
-                      return GridView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 20,
-                          childAspectRatio: 0.59,
-                        ),
-                        itemCount: state.productList.length,
-                        itemBuilder: (BuildContext context, index) {
-                          return ProductWidget(
-                            product: state.productList[index],
-                          );
-                        },
-                      );
-                    }
-
-                    return const SizedBox();
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 20,
+                    crossAxisSpacing: 20,
+                    childAspectRatio: 0.59,
+                  ),
+                  itemCount: state.productList.length,
+                  itemBuilder: (BuildContext context, index) {
+                    return ProductWidget(
+                      product: state.productList[index],
+                    );
                   },
                 ),
               )
