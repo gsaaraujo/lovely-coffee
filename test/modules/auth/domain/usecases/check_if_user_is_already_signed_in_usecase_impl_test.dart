@@ -1,5 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lovely_coffee/core/exceptions/local_storage_exception.dart';
 import 'package:lovely_coffee/application/services/local_storage/local_storage_service.dart';
 import 'package:lovely_coffee/modules/auth/domain/usecases/check_if_user_is_already_signed_in_usecase_impl.dart';
 
@@ -15,7 +17,8 @@ void main() {
   });
 
   test('usecase should return true when user is already signed in', () async {
-    when(() => mockLocalStorage.hasUser()).thenAnswer((_) async => true);
+    when(() => mockLocalStorage.hasUser())
+        .thenAnswer((_) async => const Right(true));
 
     final hasUser = await usecase();
 
@@ -25,7 +28,8 @@ void main() {
 
   test('usecase should return false when user is not already signed in',
       () async {
-    when(() => mockLocalStorage.hasUser()).thenAnswer((_) async => false);
+    when(() => mockLocalStorage.hasUser())
+        .thenAnswer((_) async => Left(LocalStorageException()));
 
     final hasUser = await usecase();
 

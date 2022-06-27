@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:lovely_coffee/core/exceptions/local_storage_exception.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,7 +27,7 @@ void main() {
     blocTest<SplashCubit, SplashStates>(
       'redirectUser() should emits [SplashLoadingState, SplashRedirectToHomeState]',
       build: () {
-        when(() => mockUsecase()).thenAnswer((_) async => true);
+        when(() => mockUsecase()).thenAnswer((_) async => const Right(true));
 
         return cubit;
       },
@@ -42,7 +44,9 @@ void main() {
     blocTest<SplashCubit, SplashStates>(
       'redirectUser() should emits [SplashLoadingState, SplashRedirectToSignInState]',
       build: () {
-        when(() => mockUsecase()).thenAnswer((_) async => false);
+        when(() => mockUsecase()).thenAnswer(
+          (_) async => Left(LocalStorageException()),
+        );
 
         return cubit;
       },
