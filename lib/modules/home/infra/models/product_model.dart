@@ -15,7 +15,7 @@ class ProductModel extends Equatable {
   final String name;
   final String additionalInfo;
   final String description;
-  final int price;
+  final double price;
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
@@ -24,7 +24,7 @@ class ProductModel extends Equatable {
       name: map['name'] ?? '',
       additionalInfo: map['additionalInfo'] ?? '',
       description: map['description'] ?? '',
-      price: map['price'] ?? 0,
+      price: map['price'] ?? 0.0,
     );
   }
 
@@ -34,7 +34,7 @@ class ProductModel extends Equatable {
     String? name,
     String? additionalInfo,
     String? description,
-    int? price,
+    double? price,
   }) {
     return ProductModel(
       id: id ?? this.id,

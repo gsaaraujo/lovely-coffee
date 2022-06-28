@@ -3,7 +3,6 @@ import 'package:lovely_coffee/core/exceptions/base_exception.dart';
 import 'package:lovely_coffee/core/exceptions/local_storage_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/models/product_model.dart';
 import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
-import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
 import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/models/favorite_product_model.dart';
 import 'package:lovely_coffee/modules/home/infra/datasources/products_datasource.dart';
@@ -63,7 +62,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
               name: productModel.name,
               additionalInfo: productModel.additionalInfo,
               description: productModel.description,
-              price: productModel.price / 100,
+              price: productModel.price,
               isFavorite: favoriteProductIDList.contains(productModel.id),
             );
           },

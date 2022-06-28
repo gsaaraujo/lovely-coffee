@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/models/product_model.dart';
 import 'package:lovely_coffee/modules/home/domain/entities/product_entity.dart';
+import 'package:lovely_coffee/application/models/user_local_storage_model.dart';
 import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/datasources/products_datasource.dart';
 import 'package:lovely_coffee/modules/home/domain/repositories/products_repository.dart';
@@ -62,9 +63,18 @@ void main() {
     price: 2550,
   );
 
+  const fakeUserLocalStorage = UserLocalStorageEntity(
+    uid: '123',
+    imageUrl: 'www.productUrl.com',
+    name: 'Gabriel',
+  );
+
   test('findAllProducts should return a list of ProductEntity', () async {
     when(() => mockDeviceConnectivityService.hasDeviceConnection())
         .thenAnswer((_) async => true);
+
+    when(() => mockLocalStorageService.getUser())
+        .thenAnswer((_) async => const Right(fakeUserLocalStorage));
 
     when(() => mockProductsDatasource.findAllProducts())
         .thenAnswer((_) async => [fakeProductModel]);

@@ -31,35 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final HomeStates state = homeCubit.state;
-
-    if (state is HomeLoadingState) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (state is HomeFailedState) {
-      if (state.exception is NoDeviceConnectionException) {
-        return const Center(
-          child: Text(
-            ExceptionMessagesConst.noConnection,
-            style: HeadingStyles.errorMessage,
-          ),
-        );
-      }
-
-      if (state.exception is UnknownException) {
-        return const Center(
-          child: Text(
-            ExceptionMessagesConst.unknown,
-            style: HeadingStyles.errorMessage,
-          ),
-        );
-      }
-    }
-
-    state as HomeSucceedState;
+    final Size size = MediaQuery.of(context).size;
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -75,6 +47,7 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.topCenter,
                       child: Container(
                         height: 161.0,
+                        width: size.width,
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
@@ -84,40 +57,52 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _BuildWelcomeText(
-                                name: state.userLocalStorage.name,
-                              ),
-                              GestureDetector(
-                                onTap: () => showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => _SignOutModal(
-                                    onSignOut: () {
-                                      homeCubit.signOut();
-                                      Modular.to.navigate('/sign-in');
-                                    },
-                                  ),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        state.userLocalStorage.imageUrl ?? '',
-                                    width: 48.0,
-                                    height: 48.0,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(
-                                      color: ColorStyles.highlight,
+                          child: BlocBuilder<HomeCubit, HomeStates>(
+                            bloc: homeCubit,
+                            builder: (context, state) {
+                              if (state is HomeSucceedState) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _BuildWelcomeText(
+                                      name: state.userLocalStorage.name,
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        Image.asset('assets/images/caffee.png'),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                    GestureDetector(
+                                      onTap: () => showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) => _SignOutModal(
+                                          onSignOut: () {
+                                            homeCubit.signOut();
+                                            Modular.to.navigate('/sign-in');
+                                          },
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              state.userLocalStorage.imageUrl ??
+                                                  '',
+                                          width: 48.0,
+                                          height: 48.0,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              const CircularProgressIndicator(
+                                            color: ColorStyles.highlight,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Image.asset(
+                                                  'assets/images/caffee.png'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return const SizedBox();
+                            },
                           ),
                         ),
                       ),
@@ -138,20 +123,56 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 25.0),
               Expanded(
-                child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.59,
-                  ),
-                  itemCount: state.productList.length,
-                  itemBuilder: (BuildContext context, index) {
-                    return ProductWidget(
-                      product: state.productList[index],
-                    );
+                child: BlocBuilder<HomeCubit, HomeStates>(
+                  bloc: homeCubit,
+                  builder: (context, state) {
+                    if (state is HomeLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (state is HomeFailedState) {
+                      if (state.exception is NoDeviceConnectionException) {
+                        return const Center(
+                          child: Text(
+                            ExceptionMessagesConst.noConnection,
+                            style: HeadingStyles.errorMessage,
+                          ),
+                        );
+                      }
+
+                      if (state.exception is UnknownException) {
+                        return const Center(
+                          child: Text(
+                            ExceptionMessagesConst.unknown,
+                            style: HeadingStyles.errorMessage,
+                          ),
+                        );
+                      }
+                    }
+
+                    if (state is HomeSucceedState) {
+                      return GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 20,
+                          crossAxisSpacing: 20,
+                          childAspectRatio: 0.59,
+                        ),
+                        itemCount: state.productList.length,
+                        itemBuilder: (BuildContext context, index) {
+                          return ProductWidget(
+                            product: state.productList[index],
+                          );
+                        },
+                      );
+                    }
+
+                    return const SizedBox();
                   },
                 ),
               )

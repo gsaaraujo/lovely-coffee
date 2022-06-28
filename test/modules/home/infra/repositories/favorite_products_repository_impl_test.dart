@@ -1,10 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
-import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lovely_coffee/core/exceptions/unknown_exception.dart';
+import 'package:lovely_coffee/core/exceptions/no_device_connection_exception.dart';
 import 'package:lovely_coffee/modules/home/infra/datasources/favorite_products_datasource.dart';
-import 'package:lovely_coffee/modules/home/domain/repositories/favorite_products_repository.dart';
 import 'package:lovely_coffee/modules/home/infra/repositories/favorite_products_repository_impl.dart';
 import 'package:lovely_coffee/application/services/device_connectivity/device_connectivity_service.dart';
 

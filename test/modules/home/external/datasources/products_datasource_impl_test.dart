@@ -48,7 +48,7 @@ void main() {
     final productsList = await datasource.findAllProducts();
 
     verify(() => firestore.collection('products'));
-    expect(productsList, [product]);
+    expect(productsList, isA<List<ProductModel>>());
   });
 
   test('findAllProducts should throw a UnknownException', () async {

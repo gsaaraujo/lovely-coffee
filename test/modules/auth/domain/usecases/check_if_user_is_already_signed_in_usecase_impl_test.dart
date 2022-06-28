@@ -23,7 +23,7 @@ void main() {
     final hasUser = await usecase();
 
     verify(() => mockLocalStorage.hasUser());
-    expect(hasUser, true);
+    expect(hasUser.fold(id, id), true);
   });
 
   test('usecase should return false when user is not already signed in',
@@ -34,6 +34,6 @@ void main() {
     final hasUser = await usecase();
 
     verify(() => mockLocalStorage.hasUser());
-    expect(hasUser, false);
+    expect(hasUser.fold(id, id), isA<LocalStorageException>());
   });
 }
