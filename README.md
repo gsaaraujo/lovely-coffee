@@ -8,7 +8,7 @@
 
 ##
 
-![alt Lovely](.github/poke_cover.png)
+![alt Lovely](.github/cover.png)
 
 ## 💡 Purpose
 
@@ -16,7 +16,7 @@ The purpose of this project is to practice Clean Architecture, SOLID, Unit Tests
 
 ## 💻 Project
 
-The project itself is pretty simple. The idea is to show the code and not the screens.
+The project itself is pretty simple. The idea was to focus on decoupling using Dependency Injection and Inversion of Control, applying advices provided from Clean Architecture.
 
 ## ✨ Technologies
 
@@ -27,7 +27,3 @@ The project itself is pretty simple. The idea is to show the code and not the sc
 - [ ] Flutter Modular
 - [ ] Firebase Auth
 - [ ] Firebase Firestore
-
-## 🖍️ Layout
-
-Lovely Coffee layout is available on Figma. You can access [through this link](https://www.figma.com/file/zSDqd31ypCvvMy9RYYEbIp/lovely-coffee?node-id=0%3A1).
